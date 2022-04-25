@@ -73,7 +73,7 @@ UpdateResult Application::Update()
 	// Get current frame time in ms
 	uint currentFrameTime = SDL_GetTicks() - startFrame;
 
-	printf("%d\n", SDL_GetTicks());
+	//printf("%d\n", SDL_GetTicks());
 
 	// If this frame is 
 	if (currentFrameTime < frameTime)
