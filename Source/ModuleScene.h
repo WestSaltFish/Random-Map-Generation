@@ -6,8 +6,7 @@
 
 enum SceneName
 {
-	SCENE_MENU = 0,
-	SCENE_GAME,
+	SCENE_GAME = 0,
 	NUM_SCENES
 };
 
@@ -23,7 +22,7 @@ class ModuleScene : public Module
 public:
 	Scene* scenes[NUM_SCENES] = { nullptr };
 
-	SceneName currentSceneIndex = SCENE_MENU;
+	SceneName currentSceneIndex = SCENE_GAME;
 public:
 	// Constructor
 	ModuleScene();

@@ -189,12 +189,10 @@
     <ClCompile Include="ModuleWindow.cpp" />
     <ClCompile Include="Particle.cpp" />
     <ClCompile Include="PlayerDieParticle.cpp" />
-    <ClCompile Include="PlayerTemplate.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneGame.cpp" />
     <ClCompile Include="SceneGameTemplate.cpp" />
     <ClCompile Include="SceneMenu.cpp" />
-    <ClCompile Include="SceneMenuTemplate.cpp" />
     <ClCompile Include="TestPowerUp.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

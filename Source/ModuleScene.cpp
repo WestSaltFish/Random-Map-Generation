@@ -1,13 +1,13 @@
 #include "ModuleScene.h"
-#include "SceneMenuTemplate.h"
 #include "SceneGameTemplate.h"
 #include "Application.h"
 #include "ModuleRender.h"
 
 ModuleScene::ModuleScene() : Module()
 {
-    scenes[SCENE_MENU] = new SceneMenuTemplate();
     scenes[SCENE_GAME] = new SceneGameTemplate();
+
+    SceneName currentSceneIndex = SCENE_GAME;
 }
 
 ModuleScene::~ModuleScene()

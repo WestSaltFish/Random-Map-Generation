@@ -1,5 +1,4 @@
 #include "SceneGameTemplate.h"
-#include "PlayerTemplate.h"
 #include "Application.h"
 #include "ModuleTextures.h"
 #include "TestPowerUp.h"
@@ -19,12 +18,6 @@ bool SceneGameTemplate::Start()
 	gameState = 0;
 
 	powerUps = 10;
-
-	// Declare and initialize every GameObject on the scene before calling SceneGame::Start()
-	// To create a class inherited to the GameObject, you only need to make new,
-	// It will take care of managing Start, Updates and even delete.
-	// If you want to have a reference to this GameObject, you can store it in a pointer
-	player = new PlayerTemplate({ 5, 5});
 
 	// If you not, you can create it directly and forget about it.
 	#pragma region Create PowerUps
@@ -63,13 +56,6 @@ bool SceneGameTemplate::Start()
 
 void SceneGameTemplate::PreUpdate()
 {
-	if (player && player->pendingToDelete && gameState != 2)
-	{
-		player = nullptr;
-		gameState = 2;
-		App->audio->PlayFx(loseSFX);
-	}
-
 	if (powerUps <= 1 && gameState != 1)
 	{
 		gameState = 1;
@@ -96,8 +82,6 @@ void SceneGameTemplate::PostUpdate()
 	if (gameState == 1)
 	{
 		App->render->AddTextureRenderQueue(winTex, { 0,0 }, { 0,0,0,0 }, 1, -1);
-
-		player->moveBlock = true;
 	}
 	else if (gameState == 2)
 	{
