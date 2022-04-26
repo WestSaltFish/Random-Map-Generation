@@ -52,9 +52,6 @@
     <Filter Include="Archivos de origen\Tools">
       <UniqueIdentifier>{fb21dfcf-3125-4a18-bb3a-98c14608cba0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Archivos de origen\GameObjects\Particles">
-      <UniqueIdentifier>{aff9d06f-bd1a-4a35-acea-25542dd11921}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h">
@@ -135,6 +132,9 @@
     <ClInclude Include="Particle.h">
       <Filter>Archivos de encabezado\GameObjects\Particles</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Proyecto2\Source\MapGenerator.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp">
@@ -179,12 +179,6 @@
     <ClCompile Include="ModuleWindow.cpp">
       <Filter>Archivos de origen\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="Particle.cpp">
-      <Filter>Archivos de origen\GameObjects\Particles</Filter>
-    </ClCompile>
-    <ClCompile Include="PlayerDieParticle.cpp">
-      <Filter>Archivos de origen\GameObjects\Particles</Filter>
-    </ClCompile>
     <ClCompile Include="Scene.cpp">
       <Filter>Archivos de origen\Scenes</Filter>
     </ClCompile>
@@ -197,8 +191,8 @@
     <ClCompile Include="SceneMenu.cpp">
       <Filter>Archivos de origen\Scenes</Filter>
     </ClCompile>
-    <ClCompile Include="TestPowerUp.cpp">
-      <Filter>Archivos de origen\GameObjects</Filter>
+    <ClCompile Include="..\..\Proyecto2\Source\MapGenerator.cpp">
+      <Filter>Archivos de origen</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
