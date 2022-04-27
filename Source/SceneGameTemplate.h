@@ -2,6 +2,7 @@
 #define __SCENE_GAME_TEMPLATE_H__
 
 #include "SceneGame.h"
+#include "MapGenerator.h"
 
 // Test class, should be removed at the start of the project
 class SceneGameTemplate : public SceneGame
@@ -21,7 +22,8 @@ public:
 	void CleanUp() override;
 
 private:
-	SDL_Rect rec = { 0, 0, 20, 20};
+	MapGenerator mapGenerator;
 
+	Map* map = nullptr;
 };
 #endif

@@ -41,7 +41,7 @@ bool ModuleRender::Init()
 	SDL_RenderSetLogicalSize(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	// Active sorting
-	renderLayers[1].sort = true;
+	//renderLayers[1].sort = true;
 
 	return ret;
 }
@@ -146,7 +146,7 @@ void ModuleRender::AddTextureRenderQueue(SDL_Texture* texture, iPoint pos, SDL_R
 	renderLayers[layer].renderObjects.push_back(renderObject);
 }
 
-void ModuleRender::AddRectRenderQueue(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, Uint8 a, uint layer, float orderInlayer, bool filled, float speed)
+void ModuleRender::AddRectRenderQueue(const SDL_Rect& rect, SDL_Color color, uint layer, float orderInlayer, bool filled, float speed)
 {
 	RenderObject renderObject;
 
@@ -160,7 +160,7 @@ void ModuleRender::AddRectRenderQueue(const SDL_Rect& rect, Uint8 r, Uint8 g, Ui
 	{ (-camera.x * speed) + rect.x * App->window->scale, (-camera.y * speed) + rect.y * App->window->scale,
 		rect.w * App->window->scale, rect.h * App->window->scale };
 
-	renderObject.InitAsRect(rec, { r,g,b,a }, filled, layer, orderInlayer, speed);
+	renderObject.InitAsRect(rec, { color.r,color.g,color.b,color.a }, filled, layer, orderInlayer, speed);
 
 	renderLayers[layer].renderObjects.push_back(renderObject);
 }
@@ -201,17 +201,32 @@ void ModuleRender::SortingObjectsInLayer(std::vector<RenderObject>& objects)
 	int less = 0;
 	int objSize = objects.size();
 
-	for (int i = 0; i < objSize; ++i)
+	for (int i = 0; i < objSize - 1; ++i)
 	{
 		less = i;
-		for (int j = i; j < objSize; ++j)
+		for (int j = i + 1; j < objSize; ++j)
 		{
-			if (objects[j].orderInLayer < objects[less].orderInLayer)
-			{
-				std::swap(objects[j], objects[less]);
-			}
+			if (objects[j].orderInLayer < objects[less].orderInLayer) less = j;
 		}
+		std::swap(objects[i], objects[less]);
 	}
+}
+
+bool ModuleRender::InScreen(const SDL_Rect& rect, float speedRegardCamera)
+{
+	int a1 = (rect.x + rect.w) * App->window->scale;
+	int a2 = rect.x * App->window->scale;
+	int a3 = (rect.y + rect.h) * App->window->scale;
+	int a4 = rect.y * App->window->scale;
+
+	int b1 = camera.x * speedRegardCamera;
+	int b2 = camera.x * speedRegardCamera + SCREEN_WIDTH;
+	int b3 = camera.y * speedRegardCamera;
+	int b4 = camera.y * speedRegardCamera + SCREEN_HEIGHT;
+
+	if (a1 < b1 || a2 > b2 || a3 < b3 || a4 > b4) return false;
+
+	return true;
 }
 
 void ModuleRender::ClearRederQueue()

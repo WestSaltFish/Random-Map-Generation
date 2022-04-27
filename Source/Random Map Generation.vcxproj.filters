@@ -117,9 +117,6 @@
     <ClInclude Include="SceneMenuTemplate.h">
       <Filter>Archivos de encabezado\Scenes</Filter>
     </ClInclude>
-    <ClInclude Include="MenuText.h">
-      <Filter>Archivos de encabezado\Others</Filter>
-    </ClInclude>
     <ClInclude Include="Application.h">
       <Filter>Archivos de encabezado\Application</Filter>
     </ClInclude>
@@ -132,8 +129,11 @@
     <ClInclude Include="Particle.h">
       <Filter>Archivos de encabezado\GameObjects\Particles</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Proyecto2\Source\MapGenerator.h">
-      <Filter>Archivos de encabezado</Filter>
+    <ClInclude Include="MapGenerator.h">
+      <Filter>Archivos de encabezado\Others</Filter>
+    </ClInclude>
+    <ClInclude Include="Map.h">
+      <Filter>Archivos de encabezado\Others</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -151,9 +151,6 @@
     </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Archivos de origen\Application</Filter>
-    </ClCompile>
-    <ClCompile Include="MenuText.cpp">
-      <Filter>Archivos de origen\Others</Filter>
     </ClCompile>
     <ClCompile Include="Module.cpp">
       <Filter>Archivos de origen\Modules</Filter>
@@ -191,8 +188,11 @@
     <ClCompile Include="SceneMenu.cpp">
       <Filter>Archivos de origen\Scenes</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Proyecto2\Source\MapGenerator.cpp">
-      <Filter>Archivos de origen</Filter>
+    <ClCompile Include="MapGenerator.cpp">
+      <Filter>Archivos de origen\Others</Filter>
+    </ClCompile>
+    <ClCompile Include="Map.cpp">
+      <Filter>Archivos de origen\Others</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

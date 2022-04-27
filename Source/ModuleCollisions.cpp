@@ -98,13 +98,13 @@ void ModuleCollisions::DebugDraw()
 			continue;
 
 		if (colliders[i]->tag == "None")
-			App->render->AddRectRenderQueue(colliders[i]->rect, 255, 255, 255, alpha, 2);// white		
+			App->render->AddRectRenderQueue(colliders[i]->rect, { 255, 255, 255, alpha }, 2);// white		
 		else if(colliders[i]->tag == "Player")
-			App->render->AddRectRenderQueue(colliders[i]->rect, 0, 0, 255, alpha, 2); // blue
+			App->render->AddRectRenderQueue(colliders[i]->rect, { 0, 0, 255, alpha }, 2); // blue
 		else if(colliders[i]->tag == "PowerUp")
-			App->render->AddRectRenderQueue(colliders[i]->rect, 0, 0, 0, alpha, 2);// green
+			App->render->AddRectRenderQueue(colliders[i]->rect, { 0, 0, 0, alpha }, 2);// green
 		else 
-			App->render->AddRectRenderQueue(colliders[i]->rect, 255, 0, 0, alpha, 2);// red
+			App->render->AddRectRenderQueue(colliders[i]->rect, { 255, 0, 0, alpha }, 2);// red
 		/*
 		switch(colliders[i]->tag)
 		{

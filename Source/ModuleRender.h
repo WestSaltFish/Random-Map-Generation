@@ -71,15 +71,12 @@ public:
 	/// Add a specific rect in the render queue
 	/// </summary>
 	/// <param name="rect">: the rect you want to draw</param>
-	/// <param name="r">: color.r</param>
-	/// <param name="g">: color.r</param>
-	/// <param name="b">: color.b</param>
-	/// <param name="a">: color.a</param>
+	/// <param name="color">: rect color</param>
 	/// <param name="layer">: layer of renderObject, must be positive</param>
 	/// <param name="orderInlayer">: order of renderObject in his layer</param>
 	/// <param name="filled">: determine whether the rect is to be filled or not</param>
 	/// <param name="speed">: relative speed between renderObject and camera, 0 = stays fixed on the screen, 1 = synchronizes camera movement 100%</param>
-	void AddRectRenderQueue(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, Uint8 a = 255,
+	void AddRectRenderQueue(const SDL_Rect& rect, SDL_Color color = { 255,255,255,255 },
 		uint layer = 1, float orderInlayer = 0.0f, bool filled = true, float speed = 1.0f);
 
 	void AddRenderObjectRenderQueue(RenderObject renderObject);
@@ -89,6 +86,13 @@ public:
 	/// </summary>
 	/// <param name="layer"></param>
 	void SortingObjectsInLayer(std::vector<RenderObject>& layer);
+
+	/// <summary>
+	/// Detect if the rect is in the screen
+	/// </summary>
+	/// <param name="rect"></param>
+	/// <returns></returns>
+	bool InScreen(const SDL_Rect& rect, float speedRegardCamera);
 
 	void ClearRederQueue();
 public:
