@@ -1,4 +1,8 @@
 #include "MapGenerator.h"
+#include <iostream>
+#include <fstream>
+using namespace std;
+
 
 MapGenerator::MapGenerator()
 {
@@ -8,15 +12,20 @@ MapGenerator::~MapGenerator()
 {
 }
 
-Map* MapGenerator::GenerateMap(int row, int col, int width, int height)
+Map* MapGenerator::GenerateMap(int row, int col, int width, int height, uint seek)
 {
 	Map* ret = new Map(row,col,width,height);
 
-	int count = 0;
+	if (seek == 0) seek = time(NULL);
+	else seek = Decrypt(seek);
+
+	SaveSeek(seek);
+
+	srand(seek);
 
 	for (int i = 0; i < row; i++)
 	{
-		for (int j = 0; j < col; j++, count++)
+		for (int j = 0; j < col; j++)
 		{
 			Tile temp;
 
@@ -36,4 +45,29 @@ Map* MapGenerator::GenerateMap(int row, int col, int width, int height)
 	}
 
     return ret;
+}
+
+void MapGenerator::SaveSeek(int seek)
+{
+	// Open in mode append
+	ofstream outfile;
+
+	outfile.open("Assets/MySeek.seek", ios::trunc);
+
+	cout << seek << endl;
+
+	outfile << Encryption(seek) << endl;
+
+	// close file
+	outfile.close();
+}
+
+int MapGenerator::Encryption(int data)
+{
+	return data ^ MAP_KEY;
+}
+
+int MapGenerator::Decrypt(int data)
+{
+	return data ^ MAP_KEY;
 }
