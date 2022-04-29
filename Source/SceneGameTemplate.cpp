@@ -15,7 +15,7 @@ bool SceneGameTemplate::Start()
 	// IMPORTANT: Init the parameters of this scene
 	// because when we restart the scene, these values should be set by default
 
-	map = mapGenerator.GenerateDungeonMap(20, 20, 99, 10, 10);
+	map = mapGenerator.GenerateDungeonMap(5, 5, 24, 30, 30);
 
 	SceneGame::Start();
 
@@ -29,9 +29,19 @@ void SceneGameTemplate::PreUpdate()
 
 void SceneGameTemplate::Update()
 {
-	if (App->input->keys[SDL_SCANCODE_SPACE] == KEY_DOWN)
+	if (App->input->keys[SDL_SCANCODE_A] == KEY_DOWN)
 	{
-		//Do something...
+		mapGenerator.TestDungeonMapBacktrack();
+	}
+	if (App->input->keys[SDL_SCANCODE_S] == KEY_REPEAT)
+	{
+		mapGenerator.TestDungeonMapBacktrack();
+	}
+
+	if (App->input->keys[SDL_SCANCODE_R] == KEY_DOWN)
+	{
+		RELEASE(map);
+		map = mapGenerator.GenerateDungeonMap(5, 5, 24, 30, 30);
 	}
 
 	SceneGame::Update();

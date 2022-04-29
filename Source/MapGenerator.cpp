@@ -3,8 +3,7 @@
 #include <fstream>
 using namespace std;
 
-#include "ModuleInput.h"
-
+#include "External/SDL/include/SDL.h"
 
 MapGenerator::MapGenerator()
 {
@@ -14,25 +13,14 @@ MapGenerator::~MapGenerator()
 {
 }
 
-Map* MapGenerator::GenerateDungeonMap(uint row, uint col, uint rooms, uint width, uint height, int eSeek)
+Map* MapGenerator::GenerateDungeonMap(uint row, uint col, uint rooms, uint tileWidth, uint tileHeight, int eSeek)
 {
-	Map* ret = new Map(row, col, width, height);
+	Map* ret = new Map(row, col, tileWidth, tileHeight);
 
 	InitSeek(eSeek);
 
-#pragma region init variables
-
 	// Limit room nums
 	rooms = rooms > row * col ? row * col : rooms;
-
-	// Create First room 
-	Tile temp;
-
-	// Free space to create rooms
-	List<iPoint> freeSpace;
-
-	// For rooms checker
-	iPoint dir[4] = { {1,0}, {0,1}, {-1,0}, {0,-1} };
 
 	// Get random position, and it should not be on the edge
 	iPoint currentPos;
@@ -41,115 +29,188 @@ Map* MapGenerator::GenerateDungeonMap(uint row, uint col, uint rooms, uint width
 
 	currentPos.y = (rand() % (row - 2)) + 1;
 
-#pragma endregion
+	// Create dungeon
+	//DungeonMapBacktrack(ret, &rooms, currentPos);
 
-#pragma region Create first room
+	// Test code
+	currentPos_t = currentPos;
+	rooms_t = rooms;
+	map_t = ret;
+
+	return ret;
+}
+
+void MapGenerator::DungeonMapBacktrack(Map* map, uint* rooms, iPoint currentPos)
+{
+	if (rooms <= 0) return;
+
+	Tile temp;
+
+	// For rooms checker
+	iPoint dir[4] = { {1,0}, {0,1}, {-1,0}, {0,-1} };
+
+	// Free space to create rooms
+	List<iPoint> freeSpace;
 
 	// Init room with dimension and position
-	temp.InitTile(width, height, currentPos, 1);
+	temp.InitTile(map->tileWidth, map->tileHeight, currentPos, 1);
 
-	// Add to Map
-	ret->tiles.add(temp);
+	map->tiles.add(temp);
 
-	// Always when we create a room, rooms--
-	rooms--;
+	if (--(*rooms) <= 0)return;
 
-	for (int i = 0; i < 4; i++)
+	while (*rooms > 0)
 	{
-		// Check position
-		iPoint posCheck = temp.mapPos + dir[i];
-		 
-		// If not exist room in this position, add to freeSpace
-		if (!ret->CheckTile(posCheck)) freeSpace.add(posCheck);
-	}
-
-	int randNum = (rand() % freeSpace.count());
-
-	//currentPos = freeSpace[randNum];
-
-	//freeSpace.del(freeSpace.At(randNum));
-
-#pragma endregion
-
-	/*
-#pragma region Generate all rooms
-
-	while (rooms > 0)
-	{
-		//printf("Count : %d\tX: %d\tY: %d\n", rooms, currentPos.x, currentPos.y);
-
-		temp.InitTile(width, height, currentPos, 1);
-
-		ret->tiles.add(temp);
-
-		rooms--;
-
-		List<iPoint> tempPos;
-
-		// Check free position
 		for (int i = 0; i < 4; i++)
 		{
 			// Check position
 			iPoint posCheck = temp.mapPos + dir[i];
 
-			// If not exist room in this position, add to tempPos
-			if (!ret->CheckTile(posCheck))
-			{
-				for (int i = 0; i < freeSpace.count(); i++)
-				{
-					if (freeSpace[i] == posCheck)
-					{
-						freeSpace.del(freeSpace.At(i));
-					}
-				}		
-				tempPos.add(posCheck);
-			}
+			// If not exist room in this position, add to freeSpace
+			if (!map->CheckTile(posCheck)) freeSpace.add(posCheck);
 		}
 
-		// If there is no space around this room
-		if (tempPos.count() <= 0)
-		{
-			// Check if exist space in freeSpace
-			if (freeSpace.count() <= 0) return ret;
+		// If not exixt any space
+		if (freeSpace.count() <= 0) return;
 
-			// Change current Posiion for next generation
-			int randNum = (rand() % freeSpace.count());
+		int nextPos = (rand() % freeSpace.count());
 
-			currentPos = freeSpace[randNum];
+		DungeonMapBacktrack(map, rooms, freeSpace[nextPos]);
 
-			freeSpace.del(freeSpace.At(randNum));
-
-			continue;
-		}
-		
-		// If exist free space around this room
-
-		// Change current Posiion for next generation
-		int randNum = (rand() % tempPos.count());
-
-		currentPos = tempPos[randNum];
-
-		tempPos.del(tempPos.At(randNum));
-
-		// If exist more 
-		if (tempPos.count() <= 0) continue;
-
-		// Add position in freeSpace for spare
-		for (int i = 0, count = tempPos.count(); i < count; i++) freeSpace.add(tempPos[i]);
-
-		tempPos.clear();	
-	}
-
-#pragma endregion
-
-*/
-
-	return ret;
+		freeSpace.clear();
+	}	
 }
 
-void MapGenerator::DungeonMapBacktrack(Map* map, uint rooms, iPoint currentPos)
+void MapGenerator::TestDungeonMapBacktrack()
 {
+	if (rooms_t <= 0) return;
 
+	Tile temp;
+
+	// For rooms checker
+	iPoint dir[4] = { {1,0}, {0,1}, {-1,0}, {0,-1} };
+
+	// Free space to create rooms
+	List<iPoint> freeSpace;
+
+	// Init room with dimension and position
+	temp.InitTile(map_t->tileWidth, map_t->tileHeight, currentPos_t, 1);
+
+	// Get current Tile
+	map_t->currentTile_t = temp;
+
+	// Add to tile list
+	map_t->tiles.add(temp);
+
+	// Clear map freeSpace
+	map_t->freeSpace_t.clear();
+
+	// Check room nums
+	if (--rooms_t <= 0)
+	{
+		map_t->currentTile_t.height = 0;
+		return;
+	}
+
+	for (int i = 0; i < 4; i++)
+	{
+		// Check position
+		iPoint posCheck = temp.mapPos + dir[i];
+
+		// If not exist room in this position, add to freeSpace
+		if (!map_t->CheckTile(posCheck))
+		{
+			// Update freeSpace
+			Tile temp2;
+			temp2.InitTile(map_t->tileWidth, map_t->tileHeight, posCheck, 1);
+			map_t->freeSpace_t.add(temp2);
+		}
+	}
+
+	// If not exist free space, get free Space in last tiles 
+	if (map_t->freeSpace_t.count() <= 0)
+	{
+		for (int i = map_t->tiles.count() - 2; i >= 0; i--)
+		{
+			temp = map_t->tiles[i];
+
+			for (int i = 0; i < 4; i++)
+			{
+				// Check position
+				iPoint posCheck = temp.mapPos + dir[i];
+
+				// If not exist room in this position, add to freeSpace
+				if (!map_t->CheckTile(posCheck))
+				{
+					// Update freeSpace
+					temp.InitTile(map_t->tileWidth, map_t->tileHeight, posCheck, 1);
+					map_t->freeSpace_t.add(temp);
+				}
+			}
+
+			if (map_t->freeSpace_t.count() > 0) break;
+		}
+		if (map_t->freeSpace_t.count() <= 0) return;
+	}
+
+	// Generate next position
+	int nextPos = (rand() % map_t->freeSpace_t.count());
+
+	currentPos_t = map_t->freeSpace_t[nextPos].mapPos;
+
+	/*
+	for (int i = 0; i < 4; i++)
+	{
+		// Check position
+		iPoint posCheck = temp.mapPos + dir[i];
+
+		// If not exist room in this position, add to freeSpace
+		if (!map_t->CheckTile(posCheck))
+		{
+			for (int i = 0; i < map_t->freeSpace_t.count(); i++)
+			{
+				if (map_t->freeSpace_t[i].mapPos == posCheck)
+					map_t->freeSpace_t.del(map_t->freeSpace_t.At(i));
+			}			
+
+			freeSpace.add(posCheck);
+		}
+	}
+
+	// If not exixt any space
+	if (freeSpace.count() <= 0)
+	{
+		int dif = map_t->freeSpace_t.count() - lastFreeSpace;
+
+		int nextPos = (rand() % lastFreeSpace + dif);
+
+		currentPos_t = map_t->freeSpace_t[nextPos].mapPos;
+
+		map_t->freeSpace_t.del(map_t->freeSpace_t.At(nextPos));
+
+		map_t->currentTile_t.InitTile(map_t->tileWidth, map_t->tileHeight, currentPos_t, 1);
+
+		return;
+	}
+
+	int nextPos = (rand() % freeSpace.count());
+
+	currentPos_t = freeSpace[nextPos];
+
+	freeSpace.del(freeSpace.At(nextPos));
+
+	map_t->currentTile_t.InitTile(map_t->tileWidth, map_t->tileHeight, currentPos_t, 1);
+
+	if (freeSpace.count() > 1)lastFreeSpace = freeSpace.count();
+
+	for (int i = 0; i < freeSpace.count(); i++)
+	{
+		temp.InitTile(map_t->tileWidth, map_t->tileHeight, freeSpace[i], 1);
+		map_t->freeSpace_t.add(temp);
+	}
+
+	freeSpace.clear();
+	*/
 }
 
 void MapGenerator::InitSeek(int eSeek)

@@ -19,8 +19,6 @@ public:
 
 	int type = 0;
 
-	bool create = false;
-
 	void InitTile(int width, int height, iPoint mapPos, int type)
 	{
 		this->width = width;
@@ -42,20 +40,9 @@ class Map
 {
 public:
 
-	Map(int row, int col, int gridWidth, int gridHeight);
+	Map(int row, int col, int tileWidth, int tileHeight);
 
 	~Map();
-
-	int row = 0;
-	int col = 0;
-
-	int gridWidth = 0;
-	int gridHeight = 0;
-
-	int mapWidth = 0;
-	int mapHeight = 0;
-
-	List<Tile>tiles;
 
 	/// <summary>
 	/// Detects if there is a room
@@ -65,6 +52,22 @@ public:
 	bool CheckTile(iPoint mapPos);
 	
 	void PostUpdate();
+
+public:
+	int row = 0;
+	int col = 0;
+
+	int tileWidth = 0;
+	int tileHeight = 0;
+
+	int mapWidth = 0;
+	int mapHeight = 0;
+
+	List<Tile> tiles;
+
+	// For testing
+	List<Tile> freeSpace_t;
+	Tile currentTile_t;
 };
 
 #endif // !__MAP_H__
