@@ -65,12 +65,13 @@ Map* MapGenerator::GenerateDungeonMap(uint row, uint col, uint rooms, uint width
 
 	int randNum = (rand() % freeSpace.count());
 
-	currentPos = freeSpace[randNum];
+	//currentPos = freeSpace[randNum];
 
-	freeSpace.del(freeSpace.At(randNum));
+	//freeSpace.del(freeSpace.At(randNum));
 
 #pragma endregion
 
+	/*
 #pragma region Generate all rooms
 
 	while (rooms > 0)
@@ -140,6 +141,8 @@ Map* MapGenerator::GenerateDungeonMap(uint row, uint col, uint rooms, uint width
 	}
 
 #pragma endregion
+
+*/
 
 	return ret;
 }
