@@ -107,15 +107,16 @@ Map* MapGenerator::GenerateDungeonMap(uint row, uint col, uint rooms, uint width
 		if (tempPos.count() <= 0)
 		{
 			// Check if exist space in freeSpace
-			if (freeSpace.count() > 0)
-			{
-				// Change current Posiion for next generation
-				currentPos = freeSpace[(rand() % freeSpace.count())];
+			if (freeSpace.count() <= 0) return ret;
 
-				continue;
-			}
+			// Change current Posiion for next generation
+			int randNum = (rand() % freeSpace.count());
 
-			return ret;
+			currentPos = freeSpace[(rand() % freeSpace.count())];
+
+			freeSpace.del(freeSpace.At(randNum));
+
+			continue;
 		}
 		
 		// If exist free space around this room
@@ -128,13 +129,12 @@ Map* MapGenerator::GenerateDungeonMap(uint row, uint col, uint rooms, uint width
 		tempPos.del(tempPos.At(randNum));
 
 		// If exist more 
-		if (tempPos.count() > 1)
-		{
-			// Add position in freeSpace for spare
-			for (int i = 0, count = tempPos.count(); i < count; i++) freeSpace.add(tempPos[i]);
+		if (tempPos.count() <= 0) continue;
 
-			tempPos.clear();
-		}	
+		// Add position in freeSpace for spare
+		for (int i = 0, count = tempPos.count(); i < count; i++) freeSpace.add(tempPos[i]);
+
+		tempPos.clear();
 	}
 
 #pragma endregion
