@@ -12,7 +12,7 @@ Map::~Map()
 }
 
 // BUG!!!!
-bool Map::CheckRoom(iPoint mapPos)
+bool Map::CheckTile(iPoint mapPos)
 {
 	if (mapPos.x < 0 || mapPos.y < 0 || mapPos.x > (col-1) || mapPos.y > (row-1)) return true;
 
@@ -22,7 +22,7 @@ bool Map::CheckRoom(iPoint mapPos)
 
 		//printf("X : %d|%d\tY: %d|%d\n", tilePos.x, mapPos.x, tilePos.y, mapPos.y);
 
-		if (tilePos.x == mapPos.x && tilePos.y == mapPos.y) return true;
+		if (tilePos == mapPos) return true;
 	}
 
 	return false;

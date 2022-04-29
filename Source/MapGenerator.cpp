@@ -3,6 +3,8 @@
 #include <fstream>
 using namespace std;
 
+#include "ModuleInput.h"
+
 
 MapGenerator::MapGenerator()
 {
@@ -51,7 +53,7 @@ Map* MapGenerator::GenerateDungeonMap(uint row, uint col, uint rooms, uint width
 
 	currentPos.x = (rand() % (row - 2)) + 1;
 
-	currentPos.y = (rand() % (row - 2)) + 1;;
+	currentPos.y = (rand() % (row - 2)) + 1;
 
 #pragma endregion
 
@@ -72,10 +74,14 @@ Map* MapGenerator::GenerateDungeonMap(uint row, uint col, uint rooms, uint width
 		iPoint posCheck = temp.mapPos + dir[i];
 		 
 		// If not exist room in this position, add to freeSpace
-		if (!ret->CheckRoom(posCheck)) freeSpace.add(posCheck);
+		if (!ret->CheckTile(posCheck)) freeSpace.add(posCheck);
 	}
 
-	currentPos = freeSpace[(rand() % freeSpace.count())];
+	int randNum = (rand() % freeSpace.count());
+
+	currentPos = freeSpace[randNum];
+
+	freeSpace.del(freeSpace.At(randNum));
 
 #pragma endregion
 
@@ -100,7 +106,17 @@ Map* MapGenerator::GenerateDungeonMap(uint row, uint col, uint rooms, uint width
 			iPoint posCheck = temp.mapPos + dir[i];
 
 			// If not exist room in this position, add to tempPos
-			if (!ret->CheckRoom(posCheck)) tempPos.add(posCheck);
+			if (!ret->CheckTile(posCheck))
+			{
+				for (int i = 0; i < freeSpace.count(); i++)
+				{
+					if (freeSpace[i] == posCheck)
+					{
+						freeSpace.del(freeSpace.At(i));
+					}
+				}		
+				tempPos.add(posCheck);
+			}
 		}
 
 		// If there is no space around this room
@@ -112,7 +128,7 @@ Map* MapGenerator::GenerateDungeonMap(uint row, uint col, uint rooms, uint width
 			// Change current Posiion for next generation
 			int randNum = (rand() % freeSpace.count());
 
-			currentPos = freeSpace[(rand() % freeSpace.count())];
+			currentPos = freeSpace[randNum];
 
 			freeSpace.del(freeSpace.At(randNum));
 
@@ -134,7 +150,7 @@ Map* MapGenerator::GenerateDungeonMap(uint row, uint col, uint rooms, uint width
 		// Add position in freeSpace for spare
 		for (int i = 0, count = tempPos.count(); i < count; i++) freeSpace.add(tempPos[i]);
 
-		tempPos.clear();
+		tempPos.clear();	
 	}
 
 #pragma endregion

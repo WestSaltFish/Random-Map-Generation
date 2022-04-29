@@ -19,6 +19,8 @@ public:
 
 	int type = 0;
 
+	bool create = false;
+
 	void InitTile(int width, int height, iPoint mapPos, int type)
 	{
 		this->width = width;
@@ -60,7 +62,7 @@ public:
 	/// </summary>
 	/// <param name="mapPos">: map position NOT WORLD POSITION!</param>
 	/// <returns></returns>
-	bool CheckRoom(iPoint mapPos);
+	bool CheckTile(iPoint mapPos);
 	
 	void PostUpdate();
 };
