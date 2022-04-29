@@ -14,15 +14,15 @@ public:
 	~MapGenerator();
 
 	/// <summary>
-	/// Generate and return map
+	/// Generate and return Dungeon map
 	/// </summary>
-	/// <param name="row"></param>
-	/// <param name="col"></param>
-	/// <param name="width">tile width</param>
-	/// <param name="height">tile height</param>
-	/// <param name="seek">map seek</param>
+	/// <param name="row">: map row</param>
+	/// <param name="col">: map col</param>
+	/// <param name="width">: tile width</param>
+	/// <param name="height">: tile height</param>
+	/// <param name="eSeek">: map encrypted seek</param>
 	/// <returns></returns>
-	Map* GenerateMap(int row, int col, int width = 20, int height = 20, uint seek = 0);
+	Map* GenerateDungeonMap(uint row, uint col, uint rooms = 1, uint width = 20, uint height = 20, int eSeek = 0);
 
 private: 
 
@@ -30,7 +30,7 @@ private:
 
 	int Encryption(int data);
 
-	int Decrypt(int data);
+	uint Decrypt(int data);
 };
 
 #endif // !__MAP_GENERATOR_H__

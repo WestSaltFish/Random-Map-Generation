@@ -11,6 +11,23 @@ Map::~Map()
 {
 }
 
+// BUG!!!!
+bool Map::CheckRoom(iPoint mapPos)
+{
+	if (mapPos.x < 0 || mapPos.y < 0 || mapPos.x > (col-1) || mapPos.y > (row-1)) return true;
+
+	for (int i = 0, count = tiles.count(); i < count; i++)
+	{
+		iPoint tilePos = tiles[i].mapPos;
+
+		//printf("X : %d|%d\tY: %d|%d\n", tilePos.x, mapPos.x, tilePos.y, mapPos.y);
+
+		if (tilePos.x == mapPos.x && tilePos.y == mapPos.y) return true;
+	}
+
+	return false;
+}
+
 void Map::PostUpdate()
 {
 	// Draw tiles;
@@ -18,12 +35,7 @@ void Map::PostUpdate()
 	{
 		Tile t = tiles[i];
 
-		if (t.weight == 0) continue;
-
-		//SDL_Rect rec = { t.worldPos.x, t.worldPos.y, t.width, t.height };
-		//SDL_SetRenderDrawBlendMode(App->render->renderer, SDL_BLENDMODE_BLEND);
-		//SDL_SetRenderDrawColor(App->render->renderer, 255, 80, 80, 255);
-		//SDL_RenderFillRect(App->render->renderer, &rec);
+		if (t.type == 0) continue;
 
 		App->render->AddRectRenderQueue({ t.worldPos.x, t.worldPos.y, t.width, t.height }, { 255, 80, 80, 255 });
 	}
