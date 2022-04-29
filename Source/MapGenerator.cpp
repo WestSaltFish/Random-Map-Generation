@@ -18,21 +18,7 @@ Map* MapGenerator::GenerateDungeonMap(uint row, uint col, uint rooms, uint width
 {
 	Map* ret = new Map(row, col, width, height);
 
-#pragma region Seek
-
-	// Init seek
-	uint seek = time(NULL);
-
-	// If exist eSeek
-	if (eSeek != 0) seek = Decrypt(eSeek);
-
-	// Save new seek
-	SaveSeek(seek);
-
-	// Init srand with seek
-	srand(seek);
-
-#pragma endregion
+	InitSeek(eSeek);
 
 #pragma region init variables
 
@@ -156,6 +142,26 @@ Map* MapGenerator::GenerateDungeonMap(uint row, uint col, uint rooms, uint width
 #pragma endregion
 
 	return ret;
+}
+
+void MapGenerator::DungeonMapBacktrack(Map* map, uint rooms, iPoint currentPos)
+{
+
+}
+
+void MapGenerator::InitSeek(int eSeek)
+{
+	// Init seek
+	uint seek = time(NULL);
+
+	// If exist eSeek, chage seek to decrypted eSeek
+	if (eSeek != 0) seek = Decrypt(eSeek);
+
+	// Save new seek to file
+	SaveSeek(seek);
+
+	// Init srand with seek
+	srand(seek);
 }
 
 void MapGenerator::SaveSeek(int seek)

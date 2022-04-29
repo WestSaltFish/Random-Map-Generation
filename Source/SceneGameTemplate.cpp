@@ -15,7 +15,7 @@ bool SceneGameTemplate::Start()
 	// IMPORTANT: Init the parameters of this scene
 	// because when we restart the scene, these values should be set by default
 
-	map = mapGenerator.GenerateDungeonMap(10, 10, 99, 20, 20);
+	map = mapGenerator.GenerateDungeonMap(20, 20, 99, 10, 10);
 
 	SceneGame::Start();
 

@@ -18,13 +18,17 @@ public:
 	/// </summary>
 	/// <param name="row">: map row</param>
 	/// <param name="col">: map col</param>
-	/// <param name="width">: tile width</param>
-	/// <param name="height">: tile height</param>
+	/// <param name="width">: tile width in pixel</param>
+	/// <param name="height">: tile height in pixel</param>
 	/// <param name="eSeek">: map encrypted seek</param>
 	/// <returns></returns>
-	Map* GenerateDungeonMap(uint row, uint col, uint rooms = 1, uint width = 20, uint height = 20, int eSeek = 0);
+	Map* GenerateDungeonMap(uint row, uint col, uint rooms = 1, uint tileWidth = 10, uint tileHeight = 10, int eSeek = 0);
 
 private: 
+
+	void DungeonMapBacktrack(Map* map, uint rooms, iPoint currentPos);
+
+	void InitSeek(int eSeek);
 
 	void SaveSeek(int seek);
 
