@@ -247,7 +247,7 @@ ul {
 
 .b-blue {
   margin-bottom: -2px;
-  background-image: url(../img/first-bg.png);
+  background-image: url(../img/Bg02.jpg);
   background-repeat: no-repeat;
   background-size: cover;
   width: 100%;
@@ -256,18 +256,18 @@ ul {
 }
 
 .b-red {
-  background-image: url(../img/second-bg.png);
+  margin-top: -2px;
+  background-image: url(../img/Bg02.jpg);
   background-repeat: no-repeat;
   background-size: cover;
   width: 100%;
   overflow: hidden;
   background-attachment: fixed;
-  margin-top: -2px;
 }
 
 .b-green {
   margin-top: -2px;
-  background-image: url(../img/third-bg.png);
+  background-image: url(../img/Bg02.jpg);
   background-repeat: no-repeat;
   background-size: cover;
   width: 100%;
@@ -276,8 +276,8 @@ ul {
 }
 
 .b-yellow {
-  margin-top: -1px;
-  background-image: url(../img/fourth-bg.png);
+  margin-top: -2px;
+  background-image: url(../img/Bg02.jpg);
   background-repeat: no-repeat;
   background-size: cover;
   width: 100%;
