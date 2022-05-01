@@ -3,10 +3,10 @@
 # Site wide configuration
 ####################################
 #
-title: zhujiajun
-email: zhujiajun.me@gmail.com
-description: zhujiajun's blog,powered by jekyll.
-url: https://zjiajun.github.io # the base hostname & protocol for your site
+title: Random map generation
+email: cad1999@qq.com
+description: Student random map generation demo
+url: https://xidashuaige.github.io/Random-Map-Generation/ # the base hostname & protocol for your site
 keywords: ["jekyll", "java", "scala","blog"]
 
 #
@@ -37,22 +37,21 @@ plugins:
 ####################################
 #
 owner:
-  name: zhujiajun
+  name: Xidashuaige
   avatar: avatar.jpg
-  job: "Java & Scala Developer"
-  bio: "A backend developer who loves design awesome things. Working for Dianping at in Shanghai, China."
-  email: zhujiajun.me@gmail.com
+  bio: "Student random map generation demo"
+  email: czd1999.@qq.com
   disqus-shortname: #username
   twitter:  #username
   facebook: #username
   google:
     plus: #username
-    analytics: UA-62251910-2
+    analytics:
     verify:
     ad-client:
     ad-slot:
   bing-verify:
-  github: zjiajun #username
+  github: Xidashuaige #username
   stackoverflow: #123456/username   from a "http://stackoverflow.com/users/123456/username" link
   linkedin: #username
   xing: #username
