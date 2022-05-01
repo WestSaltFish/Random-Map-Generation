@@ -1,9 +1,4 @@
 #include "MapGenerator.h"
-#include <iostream>
-#include <fstream>
-using namespace std;
-
-#include "External/SDL/include/SDL.h"
 
 MapGenerator::MapGenerator()
 {
@@ -13,9 +8,13 @@ MapGenerator::~MapGenerator()
 {
 }
 
+#pragma region Dungeon global map
+
 Map* MapGenerator::GenerateDungeonMap(uint row, uint col, uint rooms, uint tileWidth, uint tileHeight, int eSeek)
 {
 	Map* ret = new Map(row, col, tileWidth, tileHeight);
+
+	//ret->tiles2 = new Tile[row];
 
 	InitSeek(eSeek);
 
@@ -213,6 +212,283 @@ void MapGenerator::TestDungeonMapBacktrack()
 	*/
 }
 
+#pragma endregion
+
+//------------------------------------------------------------------------------------------------------------------------------
+
+#pragma region map with Cellular Automata
+
+Map* MapGenerator::GenerateDungeonMapCA(uint row, uint col, uint tileWidth, uint tileHeight, int eSeek)
+{
+	Map* ret = new Map(row, col, tileWidth, tileHeight);
+
+	InitSeek(eSeek);
+
+	CreateBaseMapCA(ret);
+
+	// Optimize map with Cellular Automata algorithm
+	LoopOptimizeMapCA(ret, 3);
+
+	// Find and get map areas
+	vector<vector<Tile>> areas = FindAreasMapCA(ret);
+
+	// Connect areas
+	ConnectAreasMapCA(ret, areas);
+
+	return ret;
+}
+
+void MapGenerator::CreateBaseMapCA(Map* map)
+{
+	Tile temp;
+
+	for (int i = 0; i < map->row; i++)
+	{
+		for (int j = 0; j < map->col; j++)
+		{
+			int randNum;
+
+			// If is border, create wall
+			if (map->CheckBorder({ j, i })) randNum = 2;
+
+			// If not, random
+			else randNum = rand() % 3;
+
+			// 1/3 chance to create a wall 
+			int types[3] = { 0, 0, 1 };
+
+			temp.InitTile(map->tileWidth, map->tileHeight, { j, i }, types[randNum]);
+
+			map->tiles.add(temp);
+		}
+	}
+}
+
+void MapGenerator::LoopOptimizeMapCA(Map* map, uint loopCA)
+{
+	// We keep the type data separately
+	List<int> tempTypes;
+
+	Tile temp;
+
+	for (int j = 0, count = map->tiles.count(); j < count; j++) tempTypes.add(map->tiles[j].type);
+
+	// Loop for optimize the map
+	for (int i = 0; i < loopCA; i++)
+	{
+		for (int j = 0, count = map->tiles.count(); j < count; j++)
+		{
+			temp = map->tiles[j];
+
+			// The edges should not change
+			if (map->CheckBorder(temp.mapPos)) continue;
+
+			int neighbor = map->CheckNeighborTile(temp.mapPos, 1);
+
+			tempTypes[j] = (neighbor >= 4 - temp.type) ? 1 : 0;
+
+			// Delete this region in the release version
+#pragma region Print Progress bar
+
+			float loadNum = (float)(count * i + j) / (float)(count * loopCA);
+
+			int load = (int)(loadNum * 10);
+
+			cout << "Optimize Map with CA [";
+
+			for (int i = 0; i < 10; i++)
+			{
+				if (load-- > 0) cout << "=";
+				else cout << ":";
+			}
+
+			cout << "] " << loadNum * 100 << "%" << endl;
+
+#pragma endregion
+		}
+
+		// Update tiles type when finish a loop
+		for (int j = 0, count = tempTypes.count(); j < count; j++) map->tiles[j].type = tempTypes[j];
+	}
+
+	system("cls");
+}
+
+vector<vector<Tile>> MapGenerator::FindAreasMapCA(Map* map)
+{
+	// All free tiles
+	List<Tile> groundTiles;
+
+	// Stack for DFS tiles
+	stack<Tile> tileStack;
+
+	// All areas
+	vector<vector<Tile>> ret;
+
+	// Direccion for check
+	iPoint dir[4] = { {1,0}, {0,1}, {-1,0}, {0,-1} };
+
+	// Get all free tiles
+	for (int i = 0, count = map->tiles.count(); i < count; i++)
+	{
+		if (map->tiles[i].type == 0) groundTiles.add(map->tiles[i]);
+	}
+
+	// Init tileStack
+	tileStack.push(groundTiles[0]);
+
+	// Init first area
+	vector<Tile> area;
+
+	area.push_back(tileStack.top());
+
+	// Add first area to area vector
+	ret.push_back(area);
+
+	groundTiles.del(groundTiles.At(0));
+
+	int groundTileStartCount = groundTiles.count();	// Just for testing for Print Progress bar !!!!
+
+	// Find all areas
+	while (groundTiles.count() > 0)
+	{
+		// Delete this region in the release version
+#pragma region Print Progress bar
+
+		float loadNum = ((float)groundTileStartCount - groundTiles.count()) / (float)groundTileStartCount;
+
+		int load = (int)(loadNum * 10);
+
+		cout << "Find & connect areas [";
+
+		for (int i = 0; i < 10; i++)
+		{
+			if (load-- > 0) cout << "=";
+			else cout << ":";
+		}
+
+		cout << "] " << loadNum * 100 << "%" << endl;
+
+#pragma endregion
+
+		Tile currentTile = tileStack.top();
+
+		tileStack.pop();
+
+		// Check around free space
+		for (int i = 0; i < 4; i++)
+		{
+			iPoint checkPos = currentTile.mapPos + dir[i];
+
+			for (int i = 0, count = groundTiles.count(); i < count; i++)
+			{
+				if (groundTiles[i].mapPos == checkPos)
+				{
+					tileStack.push(groundTiles[i]);
+
+					ret.back().push_back(tileStack.top());
+
+					groundTiles.del(groundTiles.At(i));
+
+					break;
+				}
+			}
+		}
+
+		if (groundTiles.count() <= 0) break;
+
+		// Create new area
+		if (tileStack.size() <= 0)
+		{
+			// random tile in groundTiles
+			int randNum = rand() % groundTiles.count();
+
+			tileStack.push(groundTiles[randNum]);
+
+			vector<Tile> area;
+
+			area.push_back(tileStack.top());
+
+			ret.push_back(area);
+
+			groundTiles.del(groundTiles.At(randNum));
+		}
+	}
+
+	system("cls");
+
+	// Delete area smaller 2
+	for (int i = 0, size = ret.size(); i < size; i++)
+	{
+		if (ret[i].size() < 2)
+		{
+			for (int j = 0; j < ret[i].size(); j++) map->tiles[ret[i][j].mapPos.y * map->col + ret[i][j].mapPos.x].type = 1;
+			ret[i].clear();
+			ret.erase(ret.begin() + i);
+			i = -1;
+			size = ret.size();
+		}
+	}
+
+	return ret;
+}
+
+void MapGenerator::ConnectAreasMapCA(Map* map, std::vector<std::vector<Tile>> areas)
+{
+	// Find the biggest area
+	pair<int, int> biggest;
+
+	biggest.first = 0;
+
+	for (int i = 0; i < areas.size(); i++)
+	{
+		biggest.second = areas[i].size() > biggest.first ? i : biggest.second;
+	}
+
+	for (int i = 0; i < areas.size(); i++)
+	{
+		// If is biggest room, pass to next
+		if (i == biggest.second) continue;
+
+		iPoint firstPos = areas[i][rand() % areas[i].size()].mapPos;
+
+		iPoint secondPos = areas[biggest.second][rand() % areas[biggest.second].size()].mapPos;
+
+		iPoint dir = secondPos - firstPos;
+
+		// Step X
+		int x = abs(dir.x);
+		// Step Y
+		int y = abs(dir.y);
+
+		// Init direccion
+		if (dir.x != 0) dir.x = dir.x > 0 ? 1 : -1;
+
+		if (dir.y != 0) dir.y = dir.y > 0 ? 1 : -1;
+
+		// Open the path X
+		for (int i = 0; i < x; i++)
+		{
+			secondPos.x -= dir.x;
+
+			map->tiles[secondPos.y * map->col + secondPos.x].type = 0;
+		}
+		// Open the path Y
+		for (int i = 0; i < y; i++)
+		{
+			secondPos.y -= dir.y;
+
+			map->tiles[secondPos.y * map->col + secondPos.x].type = 0;
+		}
+	}
+}
+
+#pragma endregion
+
+//------------------------------------------------------------------------------------------------------------------------------
+
+#pragma region Seek
+
 void MapGenerator::InitSeek(int eSeek)
 {
 	// Init seek
@@ -253,3 +529,5 @@ uint MapGenerator::Decrypt(int data)
 	// ^ (XOR): same = 0, different = 1
 	return data ^ MAP_KEY;
 }
+
+#pragma endregion

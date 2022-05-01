@@ -25,6 +25,38 @@ bool Map::CheckTile(iPoint mapPos)
 	return false;
 }
 
+int Map::CheckTileType(iPoint mapPos)
+{
+	if (mapPos.x < 0 || mapPos.y < 0 || mapPos.x >(col - 1) || mapPos.y >(row - 1)) return -1;
+
+	return tiles[mapPos.y * col + mapPos.x].type;
+
+	return -1;
+}
+
+int Map::CheckNeighborTile(iPoint mapPos, int type)
+{
+	int ret = 0;
+
+	iPoint dir[8] = { {1,0}, {0,1}, {-1,0}, {0,-1}, {1,1}, {-1,-1}, {-1,1}, {1,-1} };
+
+	for (int i = 0; i < 8; i++)
+	{
+		iPoint checkPos = mapPos + dir[i];
+
+		if (CheckTileType(checkPos) == type) ret++;
+	}
+
+	return ret;
+}
+
+bool Map::CheckBorder(iPoint mapPos)
+{
+	if (mapPos.x <= 0 || mapPos.y <= 0 || mapPos.x >= (col - 1) || mapPos.y >= (row - 1)) return true;
+
+	return false;
+}
+
 void Map::PostUpdate()
 {
 	// Draw freeSpace JUST FOR TESTING!!!
@@ -45,6 +77,8 @@ void Map::PostUpdate()
 
 		App->render->AddRectRenderQueue({ t.worldPos.x, t.worldPos.y, t.width, t.height }, { 255, 80, 80, 255 });
 	}
+
+	if (!drawGrid) return;
 
 	// Draw grid col
 	for (int i = 0; i <= col; i++)

@@ -17,6 +17,9 @@ public:
 
 	iPoint worldPos;
 
+	/// <summary>
+	/// 0 = Path/Ground/Null, 1 = Wall/Room
+	/// </summary>
 	int type = 0;
 
 	void InitTile(int width, int height, iPoint mapPos, int type)
@@ -50,7 +53,29 @@ public:
 	/// <param name="mapPos">: map position NOT WORLD POSITION!</param>
 	/// <returns></returns>
 	bool CheckTile(iPoint mapPos);
+
+	/// <summary>
+	/// Detects the room type
+	/// </summary>
+	/// <param name="mapPos">: map position NOT WORLD POSITION!</param>
+	/// <returns> return -1 if is out of range</returns>
+	int CheckTileType(iPoint mapPos);
 	
+	/// <summary>
+	/// Check how many tiles of the given type exist around the position it receives
+	/// </summary>
+	/// <param name="mapPos"> map position NOT WORLD POSITION! </param>
+	/// <param name="type"> The type you want to check </param>
+	/// <returns></returns>
+	int CheckNeighborTile(iPoint mapPos, int type = 0);
+
+	/// <summary>
+	/// Check if the received position is an edge or not
+	/// </summary>
+	/// <param name="mapPos"> map position NOT WORLD POSITION! </param>
+	/// <returns></returns>
+	bool CheckBorder(iPoint mapPos);
+
 	void PostUpdate();
 
 public:
@@ -64,6 +89,10 @@ public:
 	int mapHeight = 0;
 
 	List<Tile> tiles;
+
+	Tile* tiles2 = nullptr;
+
+	bool drawGrid = true;
 
 	// For testing
 	List<Tile> freeSpace_t;
