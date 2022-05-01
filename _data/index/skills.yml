@@ -1,0 +1,6 @@
+# skills section data
+
+label: Ability
+id : cs
+aspects: Java, Scala, MySQL, Design, English
+percentage: 70, 60, 50, 70, 30

@@ -1,1 +1,71 @@
-theme: jekyll-theme-dinky
+#
+###################################
+# Site wide configuration
+####################################
+#
+title: zhujiajun
+email: zhujiajun.me@gmail.com
+description: zhujiajun's blog,powered by jekyll.
+url: https://zjiajun.github.io # the base hostname & protocol for your site
+keywords: ["jekyll", "java", "scala","blog"]
+
+#
+###################################
+# Jekyll configuration
+####################################
+#
+timezone:          Asia/Shanghai
+markdown:          kramdown
+highlighter:       rouge
+excerpt_separator: <!--more-->
+permalink:         /articles/:year-:month/:title
+
+kramdown:
+  auto_ids: true
+  footnote_nr: 1
+  entity_output: as_char
+  toc_levels: 1..6
+  enable_coderay: false
+
+plugins:
+  - jekyll-gist
+  - jemoji
+
+#
+###################################
+# Site Owner configuration
+####################################
+#
+owner:
+  name: zhujiajun
+  avatar: avatar.jpg
+  job: "Java & Scala Developer"
+  bio: "A backend developer who loves design awesome things. Working for Dianping at in Shanghai, China."
+  email: zhujiajun.me@gmail.com
+  disqus-shortname: #username
+  twitter:  #username
+  facebook: #username
+  google:
+    plus: #username
+    analytics: UA-62251910-2
+    verify:
+    ad-client:
+    ad-slot:
+  bing-verify:
+  github: zjiajun #username
+  stackoverflow: #123456/username   from a "http://stackoverflow.com/users/123456/username" link
+  linkedin: #username
+  xing: #username
+  instagram: #username
+  lastfm: #username
+  tumblr: #username
+  pinterest: #username
+  foursquare: #username
+  steam: #username
+  dribbble: #username
+  youtube: #username
+  soundcloud: #username
+  weibo: #username
+  flickr: #username
+  codepen: #username
+  telegram: #username
