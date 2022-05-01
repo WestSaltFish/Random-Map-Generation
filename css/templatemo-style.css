@@ -30,6 +30,11 @@ ul {
   margin: 0;
 }
 
+.codi{
+  margin-top: -30px;
+  margin-left: -220px;
+}
+
 .primary-button a {
   display: inline-block;
   background-color: #fa5252;
@@ -266,7 +271,7 @@ ul {
 }
 
 .b-green {
-  margin-top: -2px;
+  margin-top: -99px;
   background-image: url(../img/Bg02.jpg);
   background-repeat: no-repeat;
   background-size: cover;
