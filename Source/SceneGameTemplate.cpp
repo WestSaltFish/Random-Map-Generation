@@ -75,8 +75,6 @@ void SceneGameTemplate::PostUpdate()
 
 void SceneGameTemplate::CleanUp()
 {
-	map->tiles.clear();
-
 	RELEASE(map);
 
 	SceneGame::CleanUp();
