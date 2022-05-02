@@ -30,11 +30,11 @@ http://www.templatemo.com/tm-505-stacked
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
     <nav class="nav">
-        <div class="burger">
+        <div class="burger burger--active">
             <div class="burger__patty"></div>
         </div>
 
-        <ul class="nav__list">
+        <ul class="nav__list nav__list--active">
             <li class="nav__item">
                 <a href="#1" class="nav__link c-blue"><img src="img/introduction.png" alt=""></a>
             </li>
@@ -67,24 +67,19 @@ http://www.templatemo.com/tm-505-stacked
                         <div class="col-md-8 col-md-offset-2">
                             <div class="home-content">
                                 <div class="home-heading">
-                                    <h1><em>Random Map Generation</em> <a href="https://github.com/Xidashuaige" style="color:#6c95db; text-decoration: underline">Yogui</a></h1>
+                                    <h1><em>Random Map Generation</em><br>by Yogui</a>
+                                    </h1>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="home-box-content">
-                                            <div class="left-text">
-                                                <h4><em>What</em> is Random map</h4>
-                                                <p align="justify">In video games, a random map is a map generated randomly by the computer, usually in strategy, roguelike games. Random maps are often the core of single and multiplayer gameplay, aside from story based campaigns
-                                                    that are often shipped with the game.</p>
-                                                <div class="primary-button">
-                                                    <a href="#2">Next</a>
-                                                </div>
-                                            </div>
-                                            <div class="right-image">
-                                                <img src="img/rand-map-example.png" alt="">
-                                            </div>
-                                        </div>
+                                <div class="left-text">
+                                    <h4 style="font-size: 30px;"><br><br><em>What</em> is Random map</h4>
+                                    <p align="justify" style="font-size: 16px;">In video games, a random map is a map generated randomly by the computer, usually in strategy, roguelike games. Random maps are often the core of single and multiplayer gameplay, aside from story based campaigns that
+                                        are often shipped with the game.</p>
+                                    <div class="primary-button">
+                                        <a href="#2">Next</a>
                                     </div>
+                                </div>
+                                <div class="right-image">
+                                    <br><br><br><img src="img/rand-map-example.png" alt="">
                                 </div>
                             </div>
                         </div>
@@ -258,39 +253,33 @@ http://www.templatemo.com/tm-505-stacked
                         <div class="col-md-8 col-md-offset-2">
                             <div class="home-content">
                                 <div class="home-heading">
-                                    <h1><em>Random Dungeon</em></h1>
+                                    <h1 style="text-align: center;"><em>Random Dungeon</em></h1>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="home-box-content">
-                                            <pre>
-                              <div class="codi">
-                                Map* MapGenerator::GenerateDungeonMap(uint row, uint col, uint rooms, uint tileWidth, uint tileHeight, int eSeed)
-                                {
-                                    Map* ret = new Map(row, col, tileWidth, tileHeight);
-                                
-                                    InitSeed(eSeed);
-                                
-                                    // Limit room nums
-                                    rooms = rooms > row * col ? row * col : rooms;
-                                
-                                    // Get random position, and it should not be on the edge
-                                    iPoint currentPos = { 0,0 };
-                                
-                                    currentPos.x = (rand() % (row - 2)) + 1;
-                                
-                                    currentPos.y = (rand() % (row - 2)) + 1;
-                                
-                                    CreateBaseMap(ret);
-                                
-                                    // Create dungeon
-                                    DungeonMapBacktrack(ret, &rooms, currentPos);
-                                
-                                    return ret;
-                                }</div></pre>
-                                        </div>
-                                    </div>
-                                </div>
+                                <pre style="background-color: #273752;">
+                                    <div class="codi">
+                                      Map* MapGenerator::GenerateDungeonMap(uint row, uint col, uint rooms, uint tileWidth, uint tileHeight, int eSeed)
+                                      {
+                                          Map* ret = new Map(row, col, tileWidth, tileHeight);
+                                      
+                                          InitSeed(eSeed);
+                                      
+                                          // Limit room nums
+                                          rooms = rooms > row * col ? row * col : rooms;
+                                      
+                                          // Get random position, and it should not be on the edge
+                                          iPoint currentPos = { 0,0 };
+                                      
+                                          currentPos.x = (rand() % (row - 2)) + 1;
+                                      
+                                          currentPos.y = (rand() % (row - 2)) + 1;
+                                      
+                                          CreateBaseMap(ret);
+                                      
+                                          // Create dungeon
+                                          DungeonMapBacktrack(ret, &rooms, currentPos);
+                                      
+                                          return ret;
+                                      }</div></pre>
                             </div>
                         </div>
                     </div>
@@ -307,35 +296,29 @@ http://www.templatemo.com/tm-505-stacked
                         <div class="col-md-8 col-md-offset-2">
                             <div class="home-content">
                                 <div class="home-heading">
-                                    <h1><em>Random Map with CA</em></h1>
+                                    <h1 style="text-align: center;"><em>Random Map with CA</em></h1>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="home-box-content">
-                                            <pre>
-                              <div class="codi">
-                                Map* MapGenerator::GenerateDungeonMapCA(uint row, uint col, uint tileWidth, uint tileHeight, int eSeed)
-                                {
-                                    Map* ret = new Map(row, col, tileWidth, tileHeight);
-                                
-                                    InitSeed(eSeed);
-                                
-                                    CreateBaseMapCA(ret);
-                                
-                                    // Optimize map with Cellular Automata algorithm
-                                    LoopOptimizeMapCA(ret, 3);
-                                
-                                    // Find and get map areas
-                                    vector<vector<Tile>> areas = FindAreasMapCA(ret);
-                                
-                                    // Connect areas
-                                    ConnectAreasMapCA(ret, areas);
-                                
-                                    return ret;
-                                }</div></pre>
-                                        </div>
-                                    </div>
-                                </div>
+                                <pre style="background-color: #273752;">
+                                    <div class="codi">
+                                      Map* MapGenerator::GenerateDungeonMapCA(uint row, uint col, uint tileWidth, uint tileHeight, int eSeed)
+                                      {
+                                          Map* ret = new Map(row, col, tileWidth, tileHeight);
+                                      
+                                          InitSeed(eSeed);
+                                      
+                                          CreateBaseMapCA(ret);
+                                      
+                                          // Optimize map with Cellular Automata algorithm
+                                          LoopOptimizeMapCA(ret, 3);
+                                      
+                                          // Find and get map areas
+                                          vector<vector<Tile>> areas = FindAreasMapCA(ret);
+                                      
+                                          // Connect areas
+                                          ConnectAreasMapCA(ret, areas);
+                                      
+                                          return ret;
+                                      }</div></pre>
                             </div>
                         </div>
                     </div>
@@ -352,31 +335,25 @@ http://www.templatemo.com/tm-505-stacked
                         <div class="col-md-8 col-md-offset-2">
                             <div class="home-content">
                                 <div class="home-heading">
-                                    <h1><em>Seed</em></h1>
+                                    <h1 style="text-align: center;"><em>Seed</em><br><br><br></h1>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="home-box-content">
-                                            <pre>
-                              <div class="codi">
-                                void MapGenerator::InitSeed(int eSeed)
-                                {
-                                    uint seed;
-                                
-                                    // If exist eSeed, chage seed to decrypted eSeed
-                                    if (eSeed != 0) seed = Decrypt(eSeed);
-                                    // Else init seed with time
-                                    else seed = time(NULL);
-                                
-                                    // Save new seed to file
-                                    SaveSeed(seed);
-                                
-                                    // Init srand with seed
-                                    srand(seed);
-                                }</div></pre>
-                                        </div>
-                                    </div>
-                                </div>
+                                <pre style="background-color: #273752;">
+                                    <div class="codi">
+                                      void MapGenerator::InitSeed(int eSeed)
+                                      {
+                                          uint seed;
+                                      
+                                          // If exist eSeed, chage seed to decrypted eSeed
+                                          if (eSeed != 0) seed = Decrypt(eSeed);
+                                          // Else init seed with time
+                                          else seed = time(NULL);
+                                      
+                                          // Save new seed to file
+                                          SaveSeed(seed);
+                                      
+                                          // Init srand with seed
+                                          srand(seed);
+                                      }</div></pre>
                             </div>
                         </div>
                     </div>
