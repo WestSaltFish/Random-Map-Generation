@@ -36,28 +36,25 @@ http://www.templatemo.com/tm-505-stacked
 
         <ul class="nav__list">
             <li class="nav__item">
-                <a href="#1" class="nav__link c-blue"><img src="img/home-icon.png" alt=""></a>
+                <a href="#1" class="nav__link c-blue"><img src="img/introduction.png" alt=""></a>
             </li>
             <li class="nav__item">
-                <a href="#2" class="nav__link c-yellow scrolly"><img src="img/about-icon.png" alt=""></a>
+                <a href="#2" class="nav__link c-yellow scrolly"><img src="img/game.png" alt=""></a>
             </li>
             <li class="nav__item">
-                <a href="#3" class="nav__link c-red"><img src="img/projects-icon.png" alt=""></a>
+                <a href="#3" class="nav__link c-red"><img src="img/mapa.png" alt=""></a>
             </li>
             <li class="nav__item">
-                <a href="#4" class="nav__link c-green"><img src="img/mapa64.png" alt=""></a>
+                <a href="#4" class="nav__link c-green"><img src="img/dungeon.png" alt=""></a>
             </li>
             <li class="nav__item">
-                <a href="#4" class="nav__link c-green"><img src="img/contact-icon.png" alt=""></a>
+                <a href="#5" class="nav__link c-green"><img src="img/cell.png" alt=""></a>
             </li>
             <li class="nav__item">
-                <a href="#4" class="nav__link c-green"><img src="img/contact-icon.png" alt=""></a>
+                <a href="#6" class="nav__link c-green"><img src="img/seed.png" alt=""></a>
             </li>
             <li class="nav__item">
-                <a href="#4" class="nav__link c-green"><img src="img/contact-icon.png" alt=""></a>
-            </li>
-            <li class="nav__item">
-                <a href="#4" class="nav__link c-green"><img src="img/contact-icon.png" alt=""></a>
+                <a href="#7" class="nav__link c-green"><img src="img/code.png" alt=""></a>
             </li>
         </ul>
     </nav>
@@ -232,12 +229,12 @@ http://www.templatemo.com/tm-505-stacked
                                             </div>
                                             <div>
                                                 <div class="project-item">
-                                                    <a href="img/project-item-02.jpg" data-lightbox="image-1"><img src="img/project-item-02.jpg" alt=""></a>
+                                                    <a href="img/random-dungeon-ac.gif" data-lightbox="image-1"><img src="img/random-dungeon-ac.gif" alt=""></a>
                                                     <div class="text-content">
                                                         <h4>Random Map <a href="https://en.wikipedia.org/wiki/Cellular_automaton" style="color:#6c95db; text-decoration: underline; ">CA</a></h4>
                                                         <p align="justify">A random map generate with CA (cellular automata) algorithm and DFS.</p>
                                                         <div class="primary-button">
-                                                            <a href="https://www.minecraft.net/es-es">Discover More</a>
+                                                            <a href="#5">Discover More</a>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -268,27 +265,29 @@ http://www.templatemo.com/tm-505-stacked
                                         <div class="home-box-content">
                                             <pre>
                               <div class="codi">
-                              Map* MapGenerator::GenerateDungeonMap(uint row, uint col, uint rooms, uint tileWidth, uint tileHeight, int eSeek)
-                              {
-                                Map* ret = new Map(row, col, tileWidth, tileHeight);
-                                                            
-                                InitSeek(eSeek);
-                                                            
-                                // Limit room nums
-                                rooms = rooms > row * col ? row * col : rooms;
-                                                            
-                                // Get random position, and it should not be on the edge
-                                iPoint currentPos;
-                                                            
-                                currentPos.x = (rand() % (row - 2)) + 1;
-                                                            
-                                currentPos.y = (rand() % (row - 2)) + 1;
-                                                            
-                                // Create dungeon
-                                DungeonMapBacktrack(ret, &rooms, currentPos);
-                                                            
-                                return ret;
-                              }</div></pre>
+                                Map* MapGenerator::GenerateDungeonMap(uint row, uint col, uint rooms, uint tileWidth, uint tileHeight, int eSeed)
+                                {
+                                    Map* ret = new Map(row, col, tileWidth, tileHeight);
+                                
+                                    InitSeed(eSeed);
+                                
+                                    // Limit room nums
+                                    rooms = rooms > row * col ? row * col : rooms;
+                                
+                                    // Get random position, and it should not be on the edge
+                                    iPoint currentPos = { 0,0 };
+                                
+                                    currentPos.x = (rand() % (row - 2)) + 1;
+                                
+                                    currentPos.y = (rand() % (row - 2)) + 1;
+                                
+                                    CreateBaseMap(ret);
+                                
+                                    // Create dungeon
+                                    DungeonMapBacktrack(ret, &rooms, currentPos);
+                                
+                                    return ret;
+                                }</div></pre>
                                         </div>
                                     </div>
                                 </div>
@@ -300,6 +299,124 @@ http://www.templatemo.com/tm-505-stacked
         </article>
     </section>
 
+    <section class="panel b-green" id="5">
+        <article class="panel__wrapper">
+            <div class="panel__content">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-8 col-md-offset-2">
+                            <div class="home-content">
+                                <div class="home-heading">
+                                    <h1><em>Random Map with CA</em></h1>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="home-box-content">
+                                            <pre>
+                              <div class="codi">
+                                Map* MapGenerator::GenerateDungeonMapCA(uint row, uint col, uint tileWidth, uint tileHeight, int eSeed)
+                                {
+                                    Map* ret = new Map(row, col, tileWidth, tileHeight);
+                                
+                                    InitSeed(eSeed);
+                                
+                                    CreateBaseMapCA(ret);
+                                
+                                    // Optimize map with Cellular Automata algorithm
+                                    LoopOptimizeMapCA(ret, 3);
+                                
+                                    // Find and get map areas
+                                    vector<vector<Tile>> areas = FindAreasMapCA(ret);
+                                
+                                    // Connect areas
+                                    ConnectAreasMapCA(ret, areas);
+                                
+                                    return ret;
+                                }</div></pre>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </article>
+    </section>
+
+    <section class="panel b-green" id="6">
+        <article class="panel__wrapper">
+            <div class="panel__content">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-8 col-md-offset-2">
+                            <div class="home-content">
+                                <div class="home-heading">
+                                    <h1><em>Seed</em></h1>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="home-box-content">
+                                            <pre>
+                              <div class="codi">
+                                void MapGenerator::InitSeed(int eSeed)
+                                {
+                                    uint seed;
+                                
+                                    // If exist eSeed, chage seed to decrypted eSeed
+                                    if (eSeed != 0) seed = Decrypt(eSeed);
+                                    // Else init seed with time
+                                    else seed = time(NULL);
+                                
+                                    // Save new seed to file
+                                    SaveSeed(seed);
+                                
+                                    // Init srand with seed
+                                    srand(seed);
+                                }</div></pre>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </article>
+    </section>
+
+    <section class="panel b-yellow" id="7">
+        <article class="panel__wrapper">
+            <div class="panel__content">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-8 col-md-offset-2">
+                            <div class="about-content">
+                                <div class="heading">
+                                    <h4>Code time</h4>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="about-box-content">
+                                            <img src="img/final.png" alt="">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-7 col-md-offset-5">
+                                        <div class="about-box-text">
+                                            <h4>Welcome to my repository</h4>
+                                            <div class="primary-button">
+                                                <a href="https://github.com/Xidashuaige/Random-Map-Generation">Repository</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </article>
+    </section>
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script>
