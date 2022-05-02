@@ -14,8 +14,6 @@ Map* MapGenerator::GenerateDungeonMap(uint row, uint col, uint rooms, uint tileW
 {
 	Map* ret = new Map(row, col, tileWidth, tileHeight);
 
-	//ret->tiles2 = new Tile[row];
-
 	InitSeek(eSeek);
 
 	// Limit room nums
@@ -29,7 +27,11 @@ Map* MapGenerator::GenerateDungeonMap(uint row, uint col, uint rooms, uint tileW
 	currentPos.y = (rand() % (row - 2)) + 1;
 
 	// Create dungeon
-	//DungeonMapBacktrack(ret, &rooms, currentPos);
+	if (!debugMode)
+	{
+		DungeonMapBacktrack(ret, &rooms, currentPos);
+		return ret;
+	}
 
 	// Test code
 	currentPos_t = currentPos;
@@ -156,60 +158,6 @@ void MapGenerator::TestDungeonMapBacktrack()
 	int nextPos = (rand() % map_t->freeSpace_t.count());
 
 	currentPos_t = map_t->freeSpace_t[nextPos].mapPos;
-
-	/*
-	for (int i = 0; i < 4; i++)
-	{
-		// Check position
-		iPoint posCheck = temp.mapPos + dir[i];
-
-		// If not exist room in this position, add to freeSpace
-		if (!map_t->CheckTile(posCheck))
-		{
-			for (int i = 0; i < map_t->freeSpace_t.count(); i++)
-			{
-				if (map_t->freeSpace_t[i].mapPos == posCheck)
-					map_t->freeSpace_t.del(map_t->freeSpace_t.At(i));
-			}			
-
-			freeSpace.add(posCheck);
-		}
-	}
-
-	// If not exixt any space
-	if (freeSpace.count() <= 0)
-	{
-		int dif = map_t->freeSpace_t.count() - lastFreeSpace;
-
-		int nextPos = (rand() % lastFreeSpace + dif);
-
-		currentPos_t = map_t->freeSpace_t[nextPos].mapPos;
-
-		map_t->freeSpace_t.del(map_t->freeSpace_t.At(nextPos));
-
-		map_t->currentTile_t.InitTile(map_t->tileWidth, map_t->tileHeight, currentPos_t, 1);
-
-		return;
-	}
-
-	int nextPos = (rand() % freeSpace.count());
-
-	currentPos_t = freeSpace[nextPos];
-
-	freeSpace.del(freeSpace.At(nextPos));
-
-	map_t->currentTile_t.InitTile(map_t->tileWidth, map_t->tileHeight, currentPos_t, 1);
-
-	if (freeSpace.count() > 1)lastFreeSpace = freeSpace.count();
-
-	for (int i = 0; i < freeSpace.count(); i++)
-	{
-		temp.InitTile(map_t->tileWidth, map_t->tileHeight, freeSpace[i], 1);
-		map_t->freeSpace_t.add(temp);
-	}
-
-	freeSpace.clear();
-	*/
 }
 
 #pragma endregion
@@ -227,15 +175,36 @@ Map* MapGenerator::GenerateDungeonMapCA(uint row, uint col, uint tileWidth, uint
 	CreateBaseMapCA(ret);
 
 	// Optimize map with Cellular Automata algorithm
-	LoopOptimizeMapCA(ret, 3);
+	if (!debugMode)
+	{
+		LoopOptimizeMapCA(ret, 3);
 
-	// Find and get map areas
-	vector<vector<Tile>> areas = FindAreasMapCA(ret);
+		// Find and get map areas
+		vector<vector<Tile>> areas = FindAreasMapCA(ret);
 
-	// Connect areas
-	ConnectAreasMapCA(ret, areas);
+		// Connect areas
+		ConnectAreasMapCA(ret, areas);
+
+		return ret;
+	}
+
+	// Test code
+	mapCAStep_t = 4;
+
+	map_t = ret;
 
 	return ret;
+}
+
+void MapGenerator::TestGenerateDungeonMapCA()
+{
+	if (mapCAStep_t <= 0) return;
+
+	if (mapCAStep_t > 1) LoopOptimizeMapCA(map_t, 1);
+
+	else ConnectAreasMapCA(map_t, FindAreasMapCA(map_t));
+
+	mapCAStep_t--;
 }
 
 void MapGenerator::CreateBaseMapCA(Map* map)
@@ -491,11 +460,12 @@ void MapGenerator::ConnectAreasMapCA(Map* map, std::vector<std::vector<Tile>> ar
 
 void MapGenerator::InitSeek(int eSeek)
 {
-	// Init seek
-	uint seek = time(NULL);
+	uint seek;
 
 	// If exist eSeek, chage seek to decrypted eSeek
 	if (eSeek != 0) seek = Decrypt(eSeek);
+	// Else init seek with time
+	else seek = time(NULL);
 
 	// Save new seek to file
 	SaveSeek(seek);

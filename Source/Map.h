@@ -90,8 +90,6 @@ public:
 
 	List<Tile> tiles;
 
-	Tile* tiles2 = nullptr;
-
 	bool drawGrid = true;
 
 	// For testing

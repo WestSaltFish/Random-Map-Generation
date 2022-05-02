@@ -6,6 +6,8 @@
 #include "ModuleScene.h"
 #include "ModuleAudio.h"
 
+int mapMode = 1;
+
 SceneGameTemplate::SceneGameTemplate()
 {
 }
@@ -15,9 +17,12 @@ bool SceneGameTemplate::Start()
 	// IMPORTANT: Init the parameters of this scene
 	// because when we restart the scene, these values should be set by default
 
-	// map = mapGenerator.GenerateDungeonMap(30, 30, 200, 20, 20);
+	if (mapMode == 0) map = mapGenerator.GenerateDungeonMap(30, 30, 200, 20, 20);
 
-	map = mapGenerator.GenerateDungeonMapCA(50, 50, 10, 10);
+	else if (mapMode == 1) map = mapGenerator.GenerateDungeonMapCA(50, 50, 10, 10);
+
+	string debugMode = mapGenerator.debugMode ? "On" : "Off";
+	cout << "Debug Mode: " << debugMode << endl;
 
 	SceneGame::Start();
 
@@ -33,11 +38,12 @@ void SceneGameTemplate::Update()
 {
 	if (App->input->keys[SDL_SCANCODE_A] == KEY_DOWN)
 	{
-		mapGenerator.TestDungeonMapBacktrack();
+		if (mapMode == 0) mapGenerator.TestDungeonMapBacktrack();
+		else if (mapMode == 1) mapGenerator.TestGenerateDungeonMapCA();
 	}
 	if (App->input->keys[SDL_SCANCODE_S] == KEY_REPEAT)
 	{
-		mapGenerator.TestDungeonMapBacktrack();
+		if (mapMode == 0) mapGenerator.TestDungeonMapBacktrack();
 	}
 	if (App->input->keys[SDL_SCANCODE_G] == KEY_DOWN)
 	{
@@ -46,8 +52,15 @@ void SceneGameTemplate::Update()
 	if (App->input->keys[SDL_SCANCODE_R] == KEY_DOWN)
 	{
 		RELEASE(map);
-		//map = mapGenerator.GenerateDungeonMap(15, 15, 390, 30, 30);
-		map = mapGenerator.GenerateDungeonMapCA(50, 50, 5, 5);
+		if (mapMode == 0) map = mapGenerator.GenerateDungeonMap(30, 30, 200, 20, 20);
+		else if (mapMode == 1) map = mapGenerator.GenerateDungeonMapCA(50, 50, 10, 10);
+	}
+	if (App->input->keys[SDL_SCANCODE_D] == KEY_DOWN)
+	{
+		system("cls");
+		mapGenerator.debugMode = !mapGenerator.debugMode;
+		string debugMode = mapGenerator.debugMode ? "On" : "Off";
+		cout << "Debug Mode: " << debugMode << endl;
 	}
 
 	SceneGame::Update();

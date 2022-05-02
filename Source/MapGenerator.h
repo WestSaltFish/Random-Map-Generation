@@ -31,6 +31,8 @@ public:
 	/// <returns></returns>
 	Map* GenerateDungeonMap(uint row, uint col, uint rooms = 1, uint tileWidth = 10, uint tileHeight = 10, int eSeek = 0);
 
+	Map* ReGenerateDungeonMap(Map* map);
+
 	void TestDungeonMapBacktrack();
 
 	/// <summary>
@@ -43,6 +45,8 @@ public:
 	/// <param name="eSeek">>: map encrypted seek</param>
 	/// <returns></returns>
 	Map* GenerateDungeonMapCA(uint row, uint col, uint tileWidth = 10, uint tileHeight = 10, int eSeek = 0);
+
+	void TestGenerateDungeonMapCA();
 
 private: 
 
@@ -66,6 +70,10 @@ private:
 
 	uint Decrypt(int data);
 
+public:
+
+	bool debugMode = false;
+
 private:
 	uint tileWidth = 1;
 
@@ -78,7 +86,7 @@ private:
 
 	iPoint currentPos_t;
 
-	int lastFreeSpace = 0;
+	int mapCAStep_t = 4;
 };
 
 #endif // !__MAP_GENERATOR_H__
