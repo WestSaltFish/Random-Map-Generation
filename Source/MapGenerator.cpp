@@ -47,9 +47,9 @@ Map* MapGenerator::GenerateDungeonMap(uint row, uint col, uint rooms, uint tileW
 	}
 
 	// Test code
-	currentPos_t = currentPos;
 	rooms_t = rooms;
 	map_t = ret;
+	map_t->currentTile = ret->tiles[currentPos.y * ret->col + currentPos.x];
 
 	return ret;
 }
@@ -95,82 +95,72 @@ void MapGenerator::TestDungeonMapBacktrack()
 {
 	if (rooms_t <= 0) return;
 
-	//Tile temp;
-
 	// For rooms checker
 	iPoint dir[4] = { {1,0}, {0,1}, {-1,0}, {0,-1} };
 
-	// Free space to create rooms
-	List<iPoint> freeSpace;
+	if(map_t->posibleDir_t.size() > 0)
+	{
+		// Get 1 of possible directions for next Position
+		int nextPosIndex = rand() % map_t->posibleDir_t.size();
 
-	// Init room with dimension and position
-	//temp.InitTile(map_t->tileWidth, map_t->tileHeight, currentPos_t, 1);
+		iPoint nextPos = map_t->posibleDir_t[nextPosIndex];
 
-	map_t->tiles[currentPos_t.y * map_t->row + currentPos_t.x].type = 1;
+		map_t->currentTile = map_t->tiles[nextPos.y * map_t->col + nextPos.x];
 
-	// Get current Tile
-	map_t->currentTile_t = map_t->tiles[currentPos_t.y * map_t->row + currentPos_t.x];
+		for (int i = 0; i < map_t->posibleDir_t.size(); i++)
+		{
+			// Pass the nextposition
+			if (i == nextPosIndex) continue;
+			map_t->freeSpace_t.push(map_t->tiles[map_t->posibleDir_t[i].y * map_t->row + map_t->posibleDir_t[i].x]);
+		}
+	}
+	else if(map_t->freeSpace_t.size() > 0)
+	{
+		// If does not exist possible direccion
+		// If exist free space	
+		for (int i = 0; i < map_t->freeSpace_t.size(); i++)
+		{
+			iPoint nextPos = map_t->freeSpace_t.top().mapPos;
 
-	// Add to tile list
-	//map_t->tiles.add(temp);
+			// Delete last free position
+			map_t->freeSpace_t.pop();
 
-	// Clear map freeSpace
-	map_t->freeSpace_t.clear();
+			// If is wall, continue to next
+			if (map_t->tiles[nextPos.y * map_t->col + nextPos.x].type == 1) continue;
+
+			// Take last position of free space for currentPos_t
+			map_t->currentTile = map_t->tiles[nextPos.y * map_t->col + nextPos.x];
+			break;
+		}	
+	}
+
+	// Clear posible positions
+	map_t->posibleDir_t.clear();
+
+	for (int i = 0; i < 4; i++)
+	{
+		// Check position
+		iPoint posCheck = map_t->currentTile.mapPos + dir[i];
+
+		// If not exist room in this position, add to freeSpace
+		if (map_t->CheckTileType(posCheck) == 0)
+		{
+			// Get possible directions
+			map_t->posibleDir_t.push_back(posCheck);
+		}
+	}
+	
+	// Change current tile to Room
+	map_t->tiles[map_t->currentTile.mapPos.y * map_t->row + map_t->currentTile.mapPos.x].type = 1;
 
 	// Check room nums
 	if (--rooms_t <= 0)
 	{
-		map_t->currentTile_t.height = 0;
+		map_t->currentTile.width = 0;
+		// Clear posibleDir_t so it doesn't keep rendering
+		map_t->posibleDir_t.clear();
 		return;
 	}
-
-	/*
-	for (int i = 0; i < 4; i++)
-	{
-		// Check position
-		iPoint posCheck = currentPos_t + dir[i];
-
-		// If not exist room in this position, add to freeSpace
-		if (!map_t->CheckTile(posCheck))
-		{
-			// Update freeSpace
-			Tile temp2;
-			temp2.InitTile(map_t->tileWidth, map_t->tileHeight, posCheck, 1);
-			map_t->freeSpace_t.add(temp2);
-		}
-	}
-
-	// If not exist free space, get free Space in last tiles 
-	if (map_t->freeSpace_t.count() <= 0)
-	{
-		for (int i = map_t->tiles.count() - 2; i >= 0; i--)
-		{
-			iPoint tempPos = map_t->tiles[i].mapPos;
-
-			for (int i = 0; i < 4; i++)
-			{
-				// Check position
-				iPoint posCheck = tempPos + dir[i];
-
-				// If not exist room in this position, add to freeSpace
-				if (!map_t->CheckTile(posCheck))
-				{
-					// Update freeSpace
-					temp.InitTile(map_t->tileWidth, map_t->tileHeight, posCheck, 1);
-					map_t->freeSpace_t.add(temp);
-				}
-			}
-
-			if (map_t->freeSpace_t.count() > 0) break;
-		}
-		if (map_t->freeSpace_t.count() <= 0) return;
-	}
-
-	// Generate next position
-	int nextPos = (rand() % map_t->freeSpace_t.count());
-
-	currentPos_t = map_t->freeSpace_t[nextPos].mapPos;
-	*/
 }
 
 #pragma endregion

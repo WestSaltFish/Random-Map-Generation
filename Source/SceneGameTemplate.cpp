@@ -6,7 +6,7 @@
 #include "ModuleScene.h"
 #include "ModuleAudio.h"
 
-int mapMode = 0;
+int mapMode = 1;
 
 SceneGameTemplate::SceneGameTemplate()
 {

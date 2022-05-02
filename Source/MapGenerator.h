@@ -4,9 +4,7 @@
 #include "Map.h"
 #include <iostream>
 #include <fstream>
-#include <stack>
 #include <vector>
-
 using namespace std;
 
 #define MAP_KEY 2333333333
@@ -83,8 +81,6 @@ private:
 	Map* map_t = nullptr;
 
 	uint rooms_t = 0;
-
-	iPoint currentPos_t;
 
 	int mapCAStep_t = 4;
 };

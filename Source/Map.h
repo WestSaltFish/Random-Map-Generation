@@ -4,6 +4,8 @@
 #include "List.h"
 #include "Point.h"
 #include "Application.h"
+#include <stack>
+#include <vector>
 
 struct Tile
 {
@@ -21,6 +23,8 @@ public:
 	/// 0 = Path/Ground/Null, 1 = Wall/Room
 	/// </summary>
 	int type = 0;
+
+	bool visited = false;
 
 	void InitTile(int width, int height, iPoint mapPos, int type)
 	{
@@ -93,8 +97,11 @@ public:
 	bool drawGrid = true;
 
 	// For testing
-	List<Tile> freeSpace_t;
-	Tile currentTile_t;
+	std::stack<Tile> freeSpace_t;
+
+	std::vector<iPoint> posibleDir_t;
+
+	Tile currentTile;
 };
 
 #endif // !__MAP_H__

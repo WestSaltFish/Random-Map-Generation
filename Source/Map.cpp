@@ -60,20 +60,21 @@ bool Map::CheckBorder(iPoint mapPos)
 void Map::PostUpdate()
 {
 	// Draw freeSpace JUST FOR TESTING!!!
-	for (int i = 0, count = freeSpace_t.count(); i < count; ++i)
+	for (int i = 0, count = posibleDir_t.size(); i < count; ++i)
 	{
-		Tile t = freeSpace_t[i];
+		Tile t = tiles[posibleDir_t[i].y * col + posibleDir_t[i].x];
 
-		App->render->AddRectRenderQueue({ t.worldPos.x, t.worldPos.y, t.width, t.height }, { 80, 165, 255, 255 });
+		App->render->AddRectRenderQueue({ t.worldPos.x, t.worldPos.y, tileWidth, tileHeight }, { 80, 165, 255, 255 });
 	}
-	App->render->AddRectRenderQueue({ currentTile_t.worldPos.x, currentTile_t.worldPos.y, currentTile_t.width, currentTile_t.height }, { 255, 190, 80, 255 },2);
+	// Draw current tile
+	App->render->AddRectRenderQueue({ currentTile.worldPos.x, currentTile.worldPos.y, currentTile.width, currentTile.height }, { 255, 190, 80, 255 },2);
 
 	// Draw tiles
 	for (int i = 0, count = tiles.count(); i < count; ++i)
 	{
 		Tile t = tiles[i];
 
-		if (t.type == 0) continue;
+		if (t.type != 1) continue;
 
 		App->render->AddRectRenderQueue({ t.worldPos.x, t.worldPos.y, t.width, t.height }, { 255, 80, 80, 255 });
 	}
