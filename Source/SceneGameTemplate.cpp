@@ -6,7 +6,7 @@
 #include "ModuleScene.h"
 #include "ModuleAudio.h"
 
-int mapMode = 1;
+int mapMode = 0;
 
 SceneGameTemplate::SceneGameTemplate()
 {
@@ -17,7 +17,7 @@ bool SceneGameTemplate::Start()
 	// IMPORTANT: Init the parameters of this scene
 	// because when we restart the scene, these values should be set by default
 
-	if (mapMode == 0) map = mapGenerator.GenerateDungeonMap(30, 30, 200, 20, 20);
+	if (mapMode == 0) map = mapGenerator.GenerateDungeonMap(5, 5, 8, 50, 50);
 
 	else if (mapMode == 1) map = mapGenerator.GenerateDungeonMapCA(50, 50, 10, 10);
 
@@ -52,7 +52,7 @@ void SceneGameTemplate::Update()
 	if (App->input->keys[SDL_SCANCODE_R] == KEY_DOWN)
 	{
 		RELEASE(map);
-		if (mapMode == 0) map = mapGenerator.GenerateDungeonMap(30, 30, 200, 20, 20);
+		if (mapMode == 0) map = mapGenerator.GenerateDungeonMap(5, 5, 8, 50, 50);
 		else if (mapMode == 1) map = mapGenerator.GenerateDungeonMapCA(50, 50, 10, 10);
 	}
 	if (App->input->keys[SDL_SCANCODE_D] == KEY_DOWN)

@@ -11,27 +11,11 @@ Map::~Map()
 {
 }
 
-bool Map::CheckTile(iPoint mapPos)
-{
-	if (mapPos.x < 0 || mapPos.y < 0 || mapPos.x > (col-1) || mapPos.y > (row-1)) return true;
-
-	for (int i = 0, count = tiles.count(); i < count; i++)
-	{
-		iPoint tilePos = tiles[i].mapPos;
-
-		if (tilePos == mapPos) return true;
-	}
-
-	return false;
-}
-
 int Map::CheckTileType(iPoint mapPos)
 {
 	if (mapPos.x < 0 || mapPos.y < 0 || mapPos.x >(col - 1) || mapPos.y >(row - 1)) return -1;
 
 	return tiles[mapPos.y * col + mapPos.x].type;
-
-	return -1;
 }
 
 int Map::CheckNeighborTile(iPoint mapPos, int type)

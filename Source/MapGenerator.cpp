@@ -10,11 +10,11 @@ MapGenerator::~MapGenerator()
 
 #pragma region Dungeon global map
 
-Map* MapGenerator::GenerateDungeonMap(uint row, uint col, uint rooms, uint tileWidth, uint tileHeight, int eSeek)
+Map* MapGenerator::GenerateDungeonMap(uint row, uint col, uint rooms, uint tileWidth, uint tileHeight, int eSeed)
 {
 	Map* ret = new Map(row, col, tileWidth, tileHeight);
 
-	InitSeek(eSeek);
+	InitSeed(eSeed);
 
 	// Limit room nums
 	rooms = rooms > row * col ? row * col : rooms;
@@ -26,18 +26,7 @@ Map* MapGenerator::GenerateDungeonMap(uint row, uint col, uint rooms, uint tileW
 
 	currentPos.y = (rand() % (row - 2)) + 1;
 
-	for (int i = 0; i < row; i++)
-	{
-		for (int j = 0; j < col; j++)
-		{
-			Tile temp;
-
-			// Init all tiles with dimension and position
-			temp.InitTile(ret->tileWidth, ret->tileHeight, { j, i}, 0);
-
-			ret->tiles.add(temp);
-		}	
-	}
+	CreateBaseMap(ret);
 
 	// Create dungeon
 	if (!debugMode)
@@ -89,6 +78,22 @@ void MapGenerator::DungeonMapBacktrack(Map* map, uint* rooms, iPoint currentPos)
 
 		freeSpace.clear();
 	}	
+}
+
+void MapGenerator::CreateBaseMap(Map* map)
+{
+	for (int i = 0; i < map->row; i++)
+	{
+		for (int j = 0; j < map->col; j++)
+		{
+			Tile temp;
+
+			// Init all tiles with dimension and position
+			temp.InitTile(map->tileWidth, map->tileHeight, { j, i }, 0);
+
+			map->tiles.add(temp);
+		}
+	}
 }
 
 void MapGenerator::TestDungeonMapBacktrack()
@@ -169,11 +174,11 @@ void MapGenerator::TestDungeonMapBacktrack()
 
 #pragma region map with Cellular Automata
 
-Map* MapGenerator::GenerateDungeonMapCA(uint row, uint col, uint tileWidth, uint tileHeight, int eSeek)
+Map* MapGenerator::GenerateDungeonMapCA(uint row, uint col, uint tileWidth, uint tileHeight, int eSeed)
 {
 	Map* ret = new Map(row, col, tileWidth, tileHeight);
 
-	InitSeek(eSeek);
+	InitSeed(eSeed);
 
 	CreateBaseMapCA(ret);
 
@@ -459,33 +464,33 @@ void MapGenerator::ConnectAreasMapCA(Map* map, std::vector<std::vector<Tile>> ar
 
 //------------------------------------------------------------------------------------------------------------------------------
 
-#pragma region Seek
+#pragma region Seed
 
-void MapGenerator::InitSeek(int eSeek)
+void MapGenerator::InitSeed(int eSeed)
 {
-	uint seek;
+	uint seed;
 
-	// If exist eSeek, chage seek to decrypted eSeek
-	if (eSeek != 0) seek = Decrypt(eSeek);
-	// Else init seek with time
-	else seek = time(NULL);
+	// If exist eSeed, chage seed to decrypted eSeed
+	if (eSeed != 0) seed = Decrypt(eSeed);
+	// Else init seed with time
+	else seed = time(NULL);
 
-	// Save new seek to file
-	SaveSeek(seek);
+	// Save new seed to file
+	SaveSeed(seed);
 
-	// Init srand with seek
-	srand(seek);
+	// Init srand with seed
+	srand(seed);
 }
 
-void MapGenerator::SaveSeek(int seek)
+void MapGenerator::SaveSeed(int seed)
 {
 	// Open file in mode trunc
 	ofstream outfile;
 
-	outfile.open("Assets/MySeek.seek", ios::trunc);
+	outfile.open("Assets/MySeed.seed", ios::trunc);
 
 	// Write data
-	outfile << Encryption(seek) << endl;
+	outfile << Encryption(seed) << endl;
 
 	// Close file
 	outfile.close();

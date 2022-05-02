@@ -27,9 +27,7 @@ public:
 	/// <param name="tileHeight">: tile height in pixel</param>
 	/// <param name="eSeek">: map encrypted seek</param>
 	/// <returns></returns>
-	Map* GenerateDungeonMap(uint row, uint col, uint rooms = 1, uint tileWidth = 10, uint tileHeight = 10, int eSeek = 0);
-
-	Map* ReGenerateDungeonMap(Map* map);
+	Map* GenerateDungeonMap(uint row, uint col, uint rooms = 1, uint tileWidth = 10, uint tileHeight = 10, int eSeed = 0);
 
 	void TestDungeonMapBacktrack();
 
@@ -42,13 +40,15 @@ public:
 	/// <param name="tileHeight">: tile height in pixel</param>
 	/// <param name="eSeek">>: map encrypted seek</param>
 	/// <returns></returns>
-	Map* GenerateDungeonMapCA(uint row, uint col, uint tileWidth = 10, uint tileHeight = 10, int eSeek = 0);
+	Map* GenerateDungeonMapCA(uint row, uint col, uint tileWidth = 10, uint tileHeight = 10, int eSeed = 0);
 
 	void TestGenerateDungeonMapCA();
 
 private: 
 
 	void DungeonMapBacktrack(Map* map, uint* rooms, iPoint currentPos);
+
+	void CreateBaseMap(Map* map);
 
 
 	void CreateBaseMapCA(Map* map);
@@ -60,9 +60,9 @@ private:
 	void ConnectAreasMapCA(Map* map, std::vector<std::vector<Tile>> areas);
 
 
-	void InitSeek(int eSeek);
+	void InitSeed(int eSeed);
 
-	void SaveSeek(int seek);
+	void SaveSeed(int seed);
 
 	int Encryption(int data);
 

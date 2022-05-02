@@ -52,13 +52,6 @@ public:
 	~Map();
 
 	/// <summary>
-	/// Detects if there is a room
-	/// </summary>
-	/// <param name="mapPos">: map position NOT WORLD POSITION!</param>
-	/// <returns></returns>
-	bool CheckTile(iPoint mapPos);
-
-	/// <summary>
 	/// Detects the room type
 	/// </summary>
 	/// <param name="mapPos">: map position NOT WORLD POSITION!</param>
