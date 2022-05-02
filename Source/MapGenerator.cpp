@@ -20,11 +20,24 @@ Map* MapGenerator::GenerateDungeonMap(uint row, uint col, uint rooms, uint tileW
 	rooms = rooms > row * col ? row * col : rooms;
 
 	// Get random position, and it should not be on the edge
-	iPoint currentPos;
+	iPoint currentPos = { 0,0 };
 
 	currentPos.x = (rand() % (row - 2)) + 1;
 
 	currentPos.y = (rand() % (row - 2)) + 1;
+
+	for (int i = 0; i < row; i++)
+	{
+		for (int j = 0; j < col; j++)
+		{
+			Tile temp;
+
+			// Init all tiles with dimension and position
+			temp.InitTile(ret->tileWidth, ret->tileHeight, { j, i}, 0);
+
+			ret->tiles.add(temp);
+		}	
+	}
 
 	// Create dungeon
 	if (!debugMode)
@@ -45,8 +58,6 @@ void MapGenerator::DungeonMapBacktrack(Map* map, uint* rooms, iPoint currentPos)
 {
 	if (rooms <= 0) return;
 
-	Tile temp;
-
 	// For rooms checker
 	iPoint dir[4] = { {1,0}, {0,1}, {-1,0}, {0,-1} };
 
@@ -54,9 +65,7 @@ void MapGenerator::DungeonMapBacktrack(Map* map, uint* rooms, iPoint currentPos)
 	List<iPoint> freeSpace;
 
 	// Init room with dimension and position
-	temp.InitTile(map->tileWidth, map->tileHeight, currentPos, 1);
-
-	map->tiles.add(temp);
+	map->tiles[currentPos.y * map->row + currentPos.x].type = 1;
 
 	if (--(*rooms) <= 0)return;
 
@@ -65,10 +74,10 @@ void MapGenerator::DungeonMapBacktrack(Map* map, uint* rooms, iPoint currentPos)
 		for (int i = 0; i < 4; i++)
 		{
 			// Check position
-			iPoint posCheck = temp.mapPos + dir[i];
+			iPoint posCheck = currentPos + dir[i];
 
 			// If not exist room in this position, add to freeSpace
-			if (!map->CheckTile(posCheck)) freeSpace.add(posCheck);
+			if (map->CheckTileType(posCheck) == 0) freeSpace.add(posCheck);
 		}
 
 		// If not exixt any space
@@ -86,7 +95,7 @@ void MapGenerator::TestDungeonMapBacktrack()
 {
 	if (rooms_t <= 0) return;
 
-	Tile temp;
+	//Tile temp;
 
 	// For rooms checker
 	iPoint dir[4] = { {1,0}, {0,1}, {-1,0}, {0,-1} };
@@ -95,13 +104,15 @@ void MapGenerator::TestDungeonMapBacktrack()
 	List<iPoint> freeSpace;
 
 	// Init room with dimension and position
-	temp.InitTile(map_t->tileWidth, map_t->tileHeight, currentPos_t, 1);
+	//temp.InitTile(map_t->tileWidth, map_t->tileHeight, currentPos_t, 1);
+
+	map_t->tiles[currentPos_t.y * map_t->row + currentPos_t.x].type = 1;
 
 	// Get current Tile
-	map_t->currentTile_t = temp;
+	map_t->currentTile_t = map_t->tiles[currentPos_t.y * map_t->row + currentPos_t.x];
 
 	// Add to tile list
-	map_t->tiles.add(temp);
+	//map_t->tiles.add(temp);
 
 	// Clear map freeSpace
 	map_t->freeSpace_t.clear();
@@ -113,10 +124,11 @@ void MapGenerator::TestDungeonMapBacktrack()
 		return;
 	}
 
+	/*
 	for (int i = 0; i < 4; i++)
 	{
 		// Check position
-		iPoint posCheck = temp.mapPos + dir[i];
+		iPoint posCheck = currentPos_t + dir[i];
 
 		// If not exist room in this position, add to freeSpace
 		if (!map_t->CheckTile(posCheck))
@@ -133,12 +145,12 @@ void MapGenerator::TestDungeonMapBacktrack()
 	{
 		for (int i = map_t->tiles.count() - 2; i >= 0; i--)
 		{
-			temp = map_t->tiles[i];
+			iPoint tempPos = map_t->tiles[i].mapPos;
 
 			for (int i = 0; i < 4; i++)
 			{
 				// Check position
-				iPoint posCheck = temp.mapPos + dir[i];
+				iPoint posCheck = tempPos + dir[i];
 
 				// If not exist room in this position, add to freeSpace
 				if (!map_t->CheckTile(posCheck))
@@ -158,6 +170,7 @@ void MapGenerator::TestDungeonMapBacktrack()
 	int nextPos = (rand() % map_t->freeSpace_t.count());
 
 	currentPos_t = map_t->freeSpace_t[nextPos].mapPos;
+	*/
 }
 
 #pragma endregion
