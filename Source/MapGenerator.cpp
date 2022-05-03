@@ -19,26 +19,25 @@ Map* MapGenerator::GenerateDungeonMap(uint row, uint col, uint rooms, uint tileW
 	// Limit room nums
 	rooms = rooms > row * col ? row * col : rooms;
 
-	// Get random position, and it should not be on the edge
-	iPoint currentPos = { 0,0 };
 
-	currentPos.x = (rand() % (row - 2)) + 1;
+	iPoint currentPos = { 1, 1};
 
-	currentPos.y = (rand() % (row - 2)) + 1;
+	// TODO A0
+	// Get random position, and it should not be on the edge 
+	// Use func rand()
+
+		// Do something here...
 
 	CreateBaseMap(ret);
 
 	// Create dungeon
-	if (!debugMode)
-	{
-		DungeonMapBacktrack(ret, &rooms, currentPos);
-		return ret;
-	}
+	if (!debugMode) DungeonMapBacktrack(ret, &rooms, currentPos);
 
 	// Test code
 	rooms_t = rooms;
 	map_t = ret;
-	map_t->currentTile = ret->tiles[currentPos.y * ret->col + currentPos.x];
+	map_t->currentTile = ret->tiles[currentPos.y * ret->row + currentPos.x];
+	map_t->currentTile.width = 0;
 
 	return ret;
 }
@@ -65,8 +64,12 @@ void MapGenerator::DungeonMapBacktrack(Map* map, uint* rooms, iPoint currentPos)
 			// Check position
 			iPoint posCheck = currentPos + dir[i];
 
+			// TODO A1
 			// If not exist room in this position, add to freeSpace
-			if (map->CheckTileType(posCheck) == 0) freeSpace.add(posCheck);
+			// Use func Map::CheckTileType()
+			// ground type == 0, room type == 1
+
+				// Do something here...		
 		}
 
 		// If not exixt any space
@@ -75,16 +78,14 @@ void MapGenerator::DungeonMapBacktrack(Map* map, uint* rooms, iPoint currentPos)
 		int nextPos = (rand() % freeSpace.count());
 
 		DungeonMapBacktrack(map, rooms, freeSpace[nextPos]);
-
-		freeSpace.clear();
 	}	
 }
 
 void MapGenerator::CreateBaseMap(Map* map)
 {
-	for (int i = 0; i < map->row; i++)
+	for (int i = 0; i < map->col; i++)
 	{
-		for (int j = 0; j < map->col; j++)
+		for (int j = 0; j < map->row; j++)
 		{
 			Tile temp;
 
@@ -100,6 +101,8 @@ void MapGenerator::TestDungeonMapBacktrack()
 {
 	if (rooms_t <= 0) return;
 
+	map_t->currentTile.width = map_t->tileWidth;
+
 	// For rooms checker
 	iPoint dir[4] = { {1,0}, {0,1}, {-1,0}, {0,-1} };
 
@@ -110,7 +113,7 @@ void MapGenerator::TestDungeonMapBacktrack()
 
 		iPoint nextPos = map_t->posibleDir_t[nextPosIndex];
 
-		map_t->currentTile = map_t->tiles[nextPos.y * map_t->col + nextPos.x];
+		map_t->currentTile = map_t->tiles[nextPos.y * map_t->row + nextPos.x];
 
 		for (int i = 0; i < map_t->posibleDir_t.size(); i++)
 		{
@@ -172,7 +175,7 @@ void MapGenerator::TestDungeonMapBacktrack()
 
 //------------------------------------------------------------------------------------------------------------------------------
 
-#pragma region map with Cellular Automata
+#pragma region Map with Cellular Automata
 
 Map* MapGenerator::GenerateDungeonMapCA(uint row, uint col, uint tileWidth, uint tileHeight, int eSeed)
 {
@@ -219,9 +222,9 @@ void MapGenerator::CreateBaseMapCA(Map* map)
 {
 	Tile temp;
 
-	for (int i = 0; i < map->row; i++)
+	for (int i = 0; i < map->col; i++)
 	{
-		for (int j = 0; j < map->col; j++)
+		for (int j = 0; j < map->row; j++)
 		{
 			int randNum;
 
@@ -254,13 +257,21 @@ void MapGenerator::LoopOptimizeMapCA(Map* map, uint loopCA)
 	for (int i = 0; i < loopCA; i++)
 	{
 		for (int j = 0, count = map->tiles.count(); j < count; j++)
-		{
+		{			
 			temp = map->tiles[j];
 
-			// The edges should not change
-			if (map->CheckBorder(temp.mapPos)) continue;
+			// TODO B0
+			// The edges should NOT change
+			// Use Map::CheckBorder()
+			 
+				// Do something here...
 
-			int neighbor = map->CheckNeighborTile(temp.mapPos, 1);
+			// Get neighbors with func Map::CheckNeighborTile() to get walls nums
+			// wall type == 1
+
+				// Do something here...
+
+			int neighbor;
 
 			tempTypes[j] = (neighbor >= 4 - temp.type) ? 1 : 0;
 
@@ -314,15 +325,15 @@ vector<vector<Tile>> MapGenerator::FindAreasMapCA(Map* map)
 	// Init tileStack
 	tileStack.push(groundTiles[0]);
 
-	// Init first area
+	groundTiles.del(groundTiles.At(0));
+
+	// Create first area
 	vector<Tile> area;
 
 	area.push_back(tileStack.top());
 
 	// Add first area to area vector
 	ret.push_back(area);
-
-	groundTiles.del(groundTiles.At(0));
 
 	int groundTileStartCount = groundTiles.count();	// Just for testing for Print Progress bar !!!!
 
@@ -382,13 +393,13 @@ vector<vector<Tile>> MapGenerator::FindAreasMapCA(Map* map)
 
 			tileStack.push(groundTiles[randNum]);
 
-			vector<Tile> area;
-
-			area.push_back(tileStack.top());
-
-			ret.push_back(area);
-
 			groundTiles.del(groundTiles.At(randNum));
+
+			// TODO B1 
+			// Create and add area to area vector (ret)
+			// Reference : line 330 - 336
+
+				// Do something here
 		}
 	}
 
@@ -397,9 +408,9 @@ vector<vector<Tile>> MapGenerator::FindAreasMapCA(Map* map)
 	// Delete area smaller 2
 	for (int i = 0, size = ret.size(); i < size; i++)
 	{
-		if (ret[i].size() < 2)
+		if (ret[i].size() <= 2)
 		{
-			for (int j = 0; j < ret[i].size(); j++) map->tiles[ret[i][j].mapPos.y * map->col + ret[i][j].mapPos.x].type = 1;
+			for (int j = 0; j < ret[i].size(); j++) map->tiles[ret[i][j].mapPos.y * map->row + ret[i][j].mapPos.x].type = 1;
 			ret[i].clear();
 			ret.erase(ret.begin() + i);
 			i = -1;
@@ -417,11 +428,13 @@ void MapGenerator::ConnectAreasMapCA(Map* map, std::vector<std::vector<Tile>> ar
 
 	biggest.first = 0;
 
+	// Find the biggest area
 	for (int i = 0; i < areas.size(); i++)
 	{
 		biggest.second = areas[i].size() > biggest.first ? i : biggest.second;
 	}
 
+	// Connect all area with biggest area
 	for (int i = 0; i < areas.size(); i++)
 	{
 		// If is biggest room, pass to next
@@ -448,14 +461,14 @@ void MapGenerator::ConnectAreasMapCA(Map* map, std::vector<std::vector<Tile>> ar
 		{
 			secondPos.x -= dir.x;
 
-			map->tiles[secondPos.y * map->col + secondPos.x].type = 0;
+			map->tiles[secondPos.y * map->row + secondPos.x].type = 0;
 		}
 		// Open the path Y
 		for (int i = 0; i < y; i++)
 		{
 			secondPos.y -= dir.y;
 
-			map->tiles[secondPos.y * map->col + secondPos.x].type = 0;
+			map->tiles[secondPos.y * map->row + secondPos.x].type = 0;
 		}
 	}
 }
@@ -468,12 +481,17 @@ void MapGenerator::ConnectAreasMapCA(Map* map, std::vector<std::vector<Tile>> ar
 
 void MapGenerator::InitSeed(int eSeed)
 {
-	uint seed;
+	uint seed = 0;
 
+	// TODO Seed
+	// Default eSeed == 0
 	// If exist eSeed, chage seed to decrypted eSeed
-	if (eSeed != 0) seed = Decrypt(eSeed);
-	// Else init seed with time
-	else seed = time(NULL);
+
+		// Do something here...
+ 
+	// Else init seed with time(NULL)
+
+		// Do something here...
 
 	// Save new seed to file
 	SaveSeed(seed);

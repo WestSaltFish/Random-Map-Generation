@@ -1,0 +1,37 @@
+//TODO A0
+
+currentPos.x = (rand() % (row - 2)) + 1;
+
+currentPos.y = (rand() % (col - 2)) + 1;
+
+-------------------------------------------------------------
+
+//TODO A1
+
+if (map->CheckTileType(posCheck) == 0) freeSpace.add(posCheck);
+
+-------------------------------------------------------------
+
+//TODO B0
+
+if (map->CheckBorder(temp.mapPos)) continue;
+
+int neighbor = map->CheckNeighborTile(temp.mapPos, 1);
+
+-------------------------------------------------------------
+
+//TODO B1
+
+vector<Tile> area;
+
+area.push_back(tileStack.top());
+
+ret.push_back(area);
+
+-------------------------------------------------------------
+
+//TODO Seed
+
+if (eSeed != 0) seed = Decrypt(eSeed);
+	
+else seed = time(NULL);
