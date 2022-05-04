@@ -244,8 +244,6 @@ void MapGenerator::LoopOptimizeMapCA(Map* map, uint loopCA)
 	// We keep the type data separately
 	vector<int> tempTypes;
 
-	Tile temp;
-
 	for (int j = 0, count = map->tiles.count(); j < count; j++) tempTypes.push_back(map->tiles[j].type);
 
 	// Loop for optimize the map
@@ -253,7 +251,7 @@ void MapGenerator::LoopOptimizeMapCA(Map* map, uint loopCA)
 	{
 		for (int j = 0, count = map->tiles.count(); j < count; j++)
 		{			
-			temp = map->tiles[j];
+			Tile temp = map->tiles[j];
 
 			// TODO B0
 			// Ignore border
