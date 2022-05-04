@@ -19,7 +19,6 @@ Map* MapGenerator::GenerateDungeonMap(uint row, uint col, uint rooms, uint tileW
 	// Limit room nums
 	rooms = rooms > row * col ? row * col : rooms;
 
-
 	iPoint currentPos = { 1, 1};
 
 	// TODO A0
@@ -44,15 +43,13 @@ Map* MapGenerator::GenerateDungeonMap(uint row, uint col, uint rooms, uint tileW
 
 void MapGenerator::DungeonMapBacktrack(Map* map, uint* rooms, iPoint currentPos)
 {
-	if (rooms <= 0) return;
-
 	// For rooms checker
 	iPoint dir[4] = { {1,0}, {0,1}, {-1,0}, {0,-1} };
 
 	// Free space to create rooms
-	List<iPoint> freeSpace;
+	vector<iPoint> freeSpace;
 
-	// Init room with dimension and position
+	// Change room type to room
 	map->tiles[currentPos.y * map->row + currentPos.x].type = 1;
 
 	if (--(*rooms) <= 0)return;
@@ -73,9 +70,9 @@ void MapGenerator::DungeonMapBacktrack(Map* map, uint* rooms, iPoint currentPos)
 		}
 
 		// If not exixt any space
-		if (freeSpace.count() <= 0) return;
+		if (freeSpace.size() <= 0) return;
 
-		int nextPos = (rand() % freeSpace.count());
+		int nextPos = (rand() % freeSpace.size());
 
 		DungeonMapBacktrack(map, rooms, freeSpace[nextPos]);
 	}	
@@ -247,11 +244,11 @@ void MapGenerator::CreateBaseMapCA(Map* map)
 void MapGenerator::LoopOptimizeMapCA(Map* map, uint loopCA)
 {
 	// We keep the type data separately
-	List<int> tempTypes;
+	vector<int> tempTypes;
 
 	Tile temp;
 
-	for (int j = 0, count = map->tiles.count(); j < count; j++) tempTypes.add(map->tiles[j].type);
+	for (int j = 0, count = map->tiles.count(); j < count; j++) tempTypes.push_back(map->tiles[j].type);
 
 	// Loop for optimize the map
 	for (int i = 0; i < loopCA; i++)
@@ -296,7 +293,7 @@ void MapGenerator::LoopOptimizeMapCA(Map* map, uint loopCA)
 		}
 
 		// Update tiles type when finish a loop
-		for (int j = 0, count = tempTypes.count(); j < count; j++) map->tiles[j].type = tempTypes[j];
+		for (int j = 0, count = tempTypes.size(); j < count; j++) map->tiles[j].type = tempTypes[j];
 	}
 
 	system("cls");
@@ -305,7 +302,7 @@ void MapGenerator::LoopOptimizeMapCA(Map* map, uint loopCA)
 vector<vector<Tile>> MapGenerator::FindAreasMapCA(Map* map)
 {
 	// All free tiles
-	List<Tile> groundTiles;
+	vector<Tile> groundTiles;
 
 	// Stack for DFS tiles
 	stack<Tile> tileStack;
@@ -319,13 +316,13 @@ vector<vector<Tile>> MapGenerator::FindAreasMapCA(Map* map)
 	// Get all free tiles
 	for (int i = 0, count = map->tiles.count(); i < count; i++)
 	{
-		if (map->tiles[i].type == 0) groundTiles.add(map->tiles[i]);
+		if (map->tiles[i].type == 0) groundTiles.push_back(map->tiles[i]);
 	}
 
 	// Init tileStack
 	tileStack.push(groundTiles[0]);
 
-	groundTiles.del(groundTiles.At(0));
+	groundTiles.erase(groundTiles.begin());
 
 	// Create first area
 	vector<Tile> area;
@@ -335,15 +332,15 @@ vector<vector<Tile>> MapGenerator::FindAreasMapCA(Map* map)
 	// Add first area to area vector
 	ret.push_back(area);
 
-	int groundTileStartCount = groundTiles.count();	// Just for testing for Print Progress bar !!!!
+	int groundTileStartCount = groundTiles.size();	// Just for testing for Print Progress bar !!!!
 
 	// Find all areas
-	while (groundTiles.count() > 0)
+	while (groundTiles.size() > 0)
 	{
 		// Delete this region in the release version
 #pragma region Print Progress bar
 
-		float loadNum = ((float)groundTileStartCount - groundTiles.count()) / (float)groundTileStartCount;
+		float loadNum = ((float)groundTileStartCount - groundTiles.size()) / (float)groundTileStartCount;
 
 		int load = (int)(loadNum * 10);
 
@@ -368,7 +365,7 @@ vector<vector<Tile>> MapGenerator::FindAreasMapCA(Map* map)
 		{
 			iPoint checkPos = currentTile.mapPos + dir[i];
 
-			for (int i = 0, count = groundTiles.count(); i < count; i++)
+			for (int i = 0, count = groundTiles.size(); i < count; i++)
 			{
 				if (groundTiles[i].mapPos == checkPos)
 				{
@@ -376,24 +373,24 @@ vector<vector<Tile>> MapGenerator::FindAreasMapCA(Map* map)
 
 					ret.back().push_back(tileStack.top());
 
-					groundTiles.del(groundTiles.At(i));
+					groundTiles.erase(groundTiles.begin() + i);
 
 					break;
 				}
 			}
 		}
 
-		if (groundTiles.count() <= 0) break;
+		if (groundTiles.size() <= 0) break;
 
 		// Create new area
 		if (tileStack.size() <= 0)
 		{
 			// random tile in groundTiles
-			int randNum = rand() % groundTiles.count();
+			int randNum = rand() % groundTiles.size();
 
 			tileStack.push(groundTiles[randNum]);
 
-			groundTiles.del(groundTiles.At(randNum));
+			groundTiles.erase(groundTiles.begin() + randNum);
 
 			// TODO B1 
 			// Create and add area to area vector (ret)
